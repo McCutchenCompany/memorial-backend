@@ -1,5 +1,5 @@
 class MemorialsController < ApplicationController
-  before_action :set_memorial, only: [:show, :update, :destroy]
+  before_action :set_memorial, only: [:show, :update, :destroy, :location]
 
   # GET /memorials
   def index
@@ -10,7 +10,12 @@ class MemorialsController < ApplicationController
 
   # GET /memorials/1
   def show
-    render json: @memorial
+    @location = @memorial.location
+    @response = {
+      memorial: @memorial,
+      location: @location
+    }
+    render json: @response
   end
 
   # POST /memorials
@@ -33,6 +38,23 @@ class MemorialsController < ApplicationController
     end
   end
 
+  def location
+    if @memorial.location
+      if @memorial.location.update({latitude: params[:latitude], longitude: params[:longitude]})
+        render json: @memorial.location
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
+    else
+      @location = Location.new({memorial_id: @memorial[:uuid], latitude: params[:latitude], longitude: params[:longitude]})
+      if @location.save
+        render json: @memorial.location, status: :created
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
   # DELETE /memorials/1
   def destroy
     @memorial.destroy
@@ -46,6 +68,6 @@ class MemorialsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def memorial_params
-      params.require(:memorial).permit(:first_name, :middle_name, :last_name, :image, :birth_date, :death_date)
+      params.require(:memorial).permit(:first_name, :middle_name, :last_name, :image, :birth_date, :death_date, :latitude, :longitude)
     end
 end
