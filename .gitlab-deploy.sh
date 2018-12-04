@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #Get servers list
 set -f
 if [ "$1" == "staging"]
