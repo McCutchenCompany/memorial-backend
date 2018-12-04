@@ -19,7 +19,3 @@ deploy_stage:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'  
   script:
     - bash .gitlab-deploy.sh
-  envrionment:
-    name: staging
-    url: https://svc-stag.mymemorial.co
-  when: manual
