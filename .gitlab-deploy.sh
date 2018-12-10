@@ -6,6 +6,6 @@ eval $(ssh-agent -s)
 
 #Get servers list
 string=$STAGING_DEPLOY_SERVER
-echo ls
+ls
 #Iterate servers for deploy and pull last commit
 ssh -i memorial-backend.pem ec2-user@$STAGING_DEPLOY_SERVER "deploy/deployAndRestart.sh" 
