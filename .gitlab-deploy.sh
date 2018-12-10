@@ -13,5 +13,5 @@ echo string
 fi
 array=[${string}]
 #Iterate servers for deploy and pull last commit
-  echo "Deploy project on server ${string}"    
-  ssh ec2-user@${string} "cd memorial-backend && git pull origin staging"
+  echo "Deploy project on server $STAGING_DEPLOY_SERVER"    
+  ssh ec2-user@$STAGING_DEPLOY_SERVER "cd memorial-backend && git pull origin staging"
