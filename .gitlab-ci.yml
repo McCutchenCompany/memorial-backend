@@ -18,5 +18,7 @@ deploy_stage:
     - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - eval $(ssh-agent -s)
+    - ssh-add ~./ssh/id_rsa
   script:
     - /bin/sh .gitlab-deploy.sh
