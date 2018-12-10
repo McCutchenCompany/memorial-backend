@@ -12,7 +12,8 @@ deploy_stage:
   only:
     - staging
   before_script:
-    - chmod +x /usr/bin/ssh
+    - ls -a
+    - chmod +x bin/ssh
   #generate ssh key
     - mkdir -p ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
