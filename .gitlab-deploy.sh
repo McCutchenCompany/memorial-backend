@@ -4,8 +4,6 @@ set -e
 eval $(ssh-agent -s)
 # echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
 
-./disableHostKeyChecking.sh
-
 #Get servers list
 string=$STAGING_DEPLOY_SERVER
 echo string
