@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+  get '/', to: 'application#status'
+  get 'status', to: 'application#status'
+
   resources :locations do
     collection do
       get 'in_range'

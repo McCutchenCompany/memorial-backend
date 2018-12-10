@@ -6,7 +6,7 @@ if [ "$1" == "staging"]
 then
 string=$STAGING_DEPLOY_SERVER
 fi
-array=(${string//,/ })
+array=[${string}]
 #Iterate servers for deploy and pull last commit
 for i in "${!array[@]}"do    
       echo "Deploy project on server ${array[i]}"    
