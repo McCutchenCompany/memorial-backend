@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-eval $(ssh-agent -s)
-echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
+# eval $(ssh-agent -s)
+# echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
 
 #Get servers list
 set -f
