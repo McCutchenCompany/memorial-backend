@@ -7,4 +7,4 @@ eval $(ssh-agent -s)
 #Get servers list
 string=$STAGING_DEPLOY_SERVER
 #Iterate servers for deploy and pull last commit
-ssh -tt $SSH_PRIVATE_KEY ec2-user@$STAGING_DEPLOY_SERVER deploy/deployAndRestart.sh
+ssh -itt $SSH_PRIVATE_KEY ec2-user@$STAGING_DEPLOY_SERVER deploy/deployAndRestart.sh
