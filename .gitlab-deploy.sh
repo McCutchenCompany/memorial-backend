@@ -3,9 +3,8 @@ set -e
 
 eval $(ssh-agent -s)
 # echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
-
+ls -l
 #Get servers list
 string=$STAGING_DEPLOY_SERVER
-ls
 #Iterate servers for deploy and pull last commit
 ssh -i memorial-backend.pem ec2-user@$STAGING_DEPLOY_SERVER "deploy/deployAndRestart.sh" 
