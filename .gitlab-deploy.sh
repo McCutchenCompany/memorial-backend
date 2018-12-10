@@ -2,7 +2,7 @@
 set -e
 
 eval $(ssh-agent -s)
-echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
+# echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
 
 #Get servers list
 string=$STAGING_DEPLOY_SERVER
