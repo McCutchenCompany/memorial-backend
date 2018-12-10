@@ -5,10 +5,9 @@ set -f
 if [ "$1" == "staging"]
 then
 string=$STAGING_DEPLOY_SERVER
+echo string
 fi
 array=[${string}]
 #Iterate servers for deploy and pull last commit
-for i in "${!array[@]}" do    
-      echo "Deploy project on server ${array[i]}"    
-      ssh ec2-user@${array[i]} "cd /var/www && git pull origin master"
-done
+  echo "Deploy project on server ${string}"    
+  ssh ec2-user@${string} "cd /var/www && git pull origin master"
