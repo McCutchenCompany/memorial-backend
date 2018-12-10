@@ -5,6 +5,7 @@ services:
 
 before_script:
   - docker info
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
 
 deploy_stage:
   stage: deploy
@@ -16,7 +17,6 @@ deploy_stage:
     - mkdir -p ~/.ssh
     - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'  
-    - chmod +x .gitlab-deploy.sh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - /bin/sh .gitlab-deploy.sh

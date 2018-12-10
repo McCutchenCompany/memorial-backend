@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+eval $(ssh-agent -s)
+echo "$SSH_PRIVATE_KEY" | tr -d '/r' | ssh-add - > /dev/null
+
 #Get servers list
 set -f
 if [ "$1" == "staging"]
@@ -10,4 +14,4 @@ fi
 array=[${string}]
 #Iterate servers for deploy and pull last commit
   echo "Deploy project on server ${string}"    
-  ssh ec2-user@${string} "cd /var/www && git pull origin master"
+  ssh ec2-user@${string} "cd memorial-backend && git pull origin staging"
