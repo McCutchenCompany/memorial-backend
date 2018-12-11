@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_11_181000) do
+ActiveRecord::Schema.define(version: 2018_12_11_190856) do
 
   create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "memorial_id"
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 2018_12_11_181000) do
     t.string "image"
     t.datetime "birth_date"
     t.datetime "death_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "timelines", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "memorial_id"
+    t.datetime "date"
+    t.string "date_format"
+    t.string "description"
+    t.string "asset_link"
+    t.string "asset_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

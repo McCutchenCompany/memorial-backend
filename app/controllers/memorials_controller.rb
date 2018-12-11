@@ -11,9 +11,11 @@ class MemorialsController < ApplicationController
   # GET /memorials/1
   def show
     @location = @memorial.location
+    @timeline = @memorial.timeline
     @response = {
       memorial: @memorial,
-      location: @location
+      location: @location,
+      timeline: @timeline
     }
     render json: @response
   end
@@ -46,7 +48,7 @@ class MemorialsController < ApplicationController
         render json: @memorial.errors, status: :unprocessable_entity
       end
     else
-      @location = Location.new({memorial_id: @memorial[:uuid], latitude: params[:latitude], longitude: params[:longitude]})
+      @location = Location.new({memorial_id: @memorial[:uuid], latitude: params[:latitude], longitude: params[:longitude], description: params[:description]})
       if @location.save
         render json: @memorial.location, status: :created
       else

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :timelines
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
 
