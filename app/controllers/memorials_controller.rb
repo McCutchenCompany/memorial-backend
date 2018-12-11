@@ -1,5 +1,5 @@
 class MemorialsController < ApplicationController
-  before_action :set_memorial, only: [:show, :update, :destroy, :location]
+  before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline]
 
   # GET /memorials
   def index
@@ -11,7 +11,7 @@ class MemorialsController < ApplicationController
   # GET /memorials/1
   def show
     @location = @memorial.location
-    @timeline = @memorial.timeline
+    @timeline = @memorial.timeline.order(:date)
     @response = {
       memorial: @memorial,
       location: @location,
@@ -40,6 +40,7 @@ class MemorialsController < ApplicationController
     end
   end
 
+  # POST /memorials/:id/location
   def location
     if @memorial.location
       if @memorial.location.update({latitude: params[:latitude], longitude: params[:longitude], description: params[:description]})
@@ -57,6 +58,23 @@ class MemorialsController < ApplicationController
     end
   end
 
+  # POST /memorials/:id/timeline
+  def timeline
+    params.require(:date)
+    if Timeline.create({
+        memorial_id: @memorial[:uuid],
+        description: params[:description],
+        date: params[:date],
+        date_format: params[:date_format],
+        asset_link: params[:asset_link],
+        asset_type: params[:asset_type]
+      })
+      render json: @memorial.timeline
+    else
+      render json: @memorial.errors, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /memorials/1
   def destroy
     @memorial.destroy
@@ -70,6 +88,20 @@ class MemorialsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def memorial_params
-      params.require(:memorial).permit(:first_name, :middle_name, :last_name, :image, :birth_date, :death_date, :latitude, :longitude, :description)
+      params.require(:memorial).permit(
+        :first_name,
+        :middle_name,
+        :last_name,
+        :image,
+        :birth_date,
+        :death_date,
+        :latitude,
+        :longitude,
+        :description,
+        :date,
+        :date_format,
+        :asset_link,
+        :asset_type
+      )
     end
 end

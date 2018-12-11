@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :memorials, only: [:index, :show, :create, :update] do
     member do
       post 'location'
+      post 'timeline'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
