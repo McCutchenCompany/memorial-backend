@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2018_11_29_223154) do
 
-  create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.float "latitude"
     t.float "longitude"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2018_11_29_223154) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.binary "user_id"
     t.string "first_name"
     t.string "middle_name"

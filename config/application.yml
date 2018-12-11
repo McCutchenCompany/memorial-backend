@@ -1,0 +1,24 @@
+# MEMORIAL_DATABASE_HOST: "localhost"
+# MEMORIAL_DATABASE_USERNAME: "root"
+# MEMORIAL_DATABASE_PASSWORD: ""
+
+# test:
+#   MEMORIAL_DATABASE_NAME: "memorial_test"
+#   MEMORIAL_DATABASE_USERNAME: "root"
+#   MEMORIAL_DATABASE_HOST: "localhost"
+#   MEMORIAL_DATABASE_PASSWORD: "test"
+
+# development:
+#   MEMORIAL_DATABASE_NAME: "memorial_dev"
+
+# staging:
+#   MEMORIAL_DATABASE_HOST: "localhost"
+#   MEMORIAL_DATABASE_USERNAME: "root"
+#   MEMORIAL_DATABASE_PASSWORD: ""
+#   MEMORIAL_DATABASE_NAME: "memorial-staging"
+
+# production:
+#   MEMORIAL_DATABASE_HOST: "localhost"
+#   MEMORIAL_DATABASE_USERNAME: "root"
+#   MEMORIAL_DATABASE_PASSWORD: ""
+#   MEMORIAL_DATABASE_NAME: "memorial"
