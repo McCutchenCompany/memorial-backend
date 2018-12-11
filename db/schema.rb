@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2018_12_11_194356) do
     t.float "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description"
+    t.text "description"
   end
 
   create_table "memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -31,14 +31,14 @@ ActiveRecord::Schema.define(version: 2018_12_11_194356) do
     t.datetime "death_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description"
+    t.text "description"
   end
 
   create_table "timelines", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "memorial_id"
     t.datetime "date"
     t.string "date_format"
-    t.string "description"
+    t.text "description"
     t.string "asset_link"
     t.string "asset_type"
     t.datetime "created_at", null: false
