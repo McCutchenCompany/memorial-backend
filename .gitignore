@@ -24,3 +24,4 @@
 .staging.env
 .development.env
 .production.env
+docker-compose.yml
