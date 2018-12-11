@@ -40,7 +40,7 @@ class MemorialsController < ApplicationController
 
   def location
     if @memorial.location
-      if @memorial.location.update({latitude: params[:latitude], longitude: params[:longitude]})
+      if @memorial.location.update({latitude: params[:latitude], longitude: params[:longitude], description: params[:description]})
         render json: @memorial.location
       else
         render json: @memorial.errors, status: :unprocessable_entity
@@ -68,6 +68,6 @@ class MemorialsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def memorial_params
-      params.require(:memorial).permit(:first_name, :middle_name, :last_name, :image, :birth_date, :death_date, :latitude, :longitude)
+      params.require(:memorial).permit(:first_name, :middle_name, :last_name, :image, :birth_date, :death_date, :latitude, :longitude, :description)
     end
 end
