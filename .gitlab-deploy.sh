@@ -8,4 +8,5 @@ set -e
 string=$STAGING_DEPLOY_SERVER
 #Iterate servers for deploy and pull last commit
 # ssh -i memorial-backend.pem ec2-user@$STAGING_DEPLOY_SERVER "deploy/deployAndRestart.sh" 
-sshpass ssh -vT -o StrictHostKeyChecking=no ec2-user@$STAGING_DEPLOY_SERVER "deploy/deployAndRestart.sh"
+sshpass scp -r ./ ec2-user@$STAGING_DEPLOY_SERVER:memorial-backend
+sshpass ssh -o StrictHostKeyChecking=no ec2-user@$STAGING_DEPLOY_SERVER "deploy/deployAndRestart.sh"
