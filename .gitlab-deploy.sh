@@ -6,7 +6,6 @@ set -e
 # cat memorial-backend.pem
 #Get servers list
 string=$STAGING_DEPLOY_SERVER
-export SSHPASS=$SSH_PRIVATE_KEY
 #Iterate servers for deploy and pull last commit
 # ssh -i memorial-backend.pem ec2-user@$STAGING_DEPLOY_SERVER "deploy/deployAndRestart.sh" 
 sshpass -e scp -o StrictHostKeyChecking=no -r ./ ec2-user@$STAGING_DEPLOY_SERVER:memorial-backend
