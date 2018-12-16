@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
 
-  resources :timelines
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
-
+  
+  resources :users do
+    collection do
+      get 'profile'
+    end
+  end
+  resources :timelines
   resources :locations do
     collection do
       get 'in_range'
@@ -15,5 +20,6 @@ Rails.application.routes.draw do
       post 'timeline'
     end
   end
+  resources :public_memorials, only: [:index, :show]
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
