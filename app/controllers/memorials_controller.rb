@@ -1,33 +1,47 @@
 class MemorialsController < ApplicationController
+  include Secured
+  before_action :set_user
   before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline]
 
   # GET /memorials
   def index
-    @memorials = Memorial.all
+    @memorials = @user.memorial
 
     render json: @memorials
   end
 
   # GET /memorials/1
   def show
-    @location = @memorial.location
-    @timeline = @memorial.timeline.order(:date)
-    @response = {
-      memorial: @memorial,
-      location: @location,
-      timeline: @timeline
-    }
-    render json: @response
+    if @memorial.nil?
+      render json: {error: 'This memorial does not belong to you'}, status: 401
+    else
+      @location = @memorial.location
+      @timeline = @memorial.timeline.order(:date)
+      @response = {
+        memorial: @memorial,
+        location: @location,
+        timeline: @timeline
+      }
+      render json: @response
+    end
   end
 
   # POST /memorials
   def create
-    @memorial = Memorial.new(memorial_params)
+    if User.can_create(@user)
+      puts 'User can create another memorial'
+      @memorial = @user.memorial.new(memorial_params)
 
-    if @memorial.save
-      render json: @memorial, status: :created, location: @memorial
+      if @memorial.save
+        if @user.update({licenses_in_use: @user[:licenses_in_use] + 1})
+          render json: @memorial, status: :created, location: @memorial
+        end
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
     else
-      render json: @memorial.errors, status: :unprocessable_entity
+      puts 'User cannot create another memorial'
+      render json: {error: "You must purchase another license to create another memorial"}, status: 401
     end
   end
 
@@ -83,7 +97,11 @@ class MemorialsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
-      @memorial = Memorial.find(params[:id])
+      @memorial = Memorial.where(uuid: params[:id], user_id: @user[:uuid])[0]
+    end
+
+    def set_user
+      @user = User.find_by(auth0_id: auth_token[0]['sub'])
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -101,7 +119,8 @@ class MemorialsController < ApplicationController
         :date,
         :date_format,
         :asset_link,
-        :asset_type
+        :asset_type,
+        :user_id
       )
     end
 end
