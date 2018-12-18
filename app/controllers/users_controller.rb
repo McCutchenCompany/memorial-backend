@@ -41,11 +41,11 @@ class UsersController < ApplicationController
 
   def profile
     if @user = User.find_by(auth0_id: auth_token[0]['sub'])
-      render json: @user
+      render json: {user: @user, memorials: @user.memorial}
     else
       @user = User.new({auth0_id: auth_token[0]['sub'], licenses: 0, licenses_in_use: 0})
       if @user.save
-        render json: @user, status: :created, location: @user
+        render json: {user: @user, memorials: @user.memorial}, status: :created, location: @user
       else
         render json: @user.errors, status: :unprocessable_entity
       end
@@ -55,7 +55,7 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      @user = User.find_by(auth0_id: auth_token[0]['sub'])
     end
 
     # Only allow a trusted parameter "white list" through.
