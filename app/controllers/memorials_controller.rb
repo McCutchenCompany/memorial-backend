@@ -94,7 +94,7 @@ class MemorialsController < ApplicationController
   def image
     if @memorial
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      name = params[:id] + '/' + URI.encode(params[:file].original_filename)
+      name = params[:id] + '/' + params[:file].original_filename
       
       obj = s3.bucket(ENV['S3_BUCKET']).object(name)
 
@@ -102,7 +102,7 @@ class MemorialsController < ApplicationController
       obj.upload_file(params[:file].tempfile, acl: 'public-read')
 
       #Create an object for the upload
-      if obj.public_url && @memorial.update({image: name})
+      if obj.public_url && @memorial.update({image: params[:id] + '/' + URI.encode(params[:file].original_filename)})
         render json: @memorial
       else
         render json: @memorial.errors, status: :unprocessable_entity
