@@ -99,7 +99,7 @@ class MemorialsController < ApplicationController
       obj = s3.bucket(ENV['S3_BUCKET']).object(name)
 
       # Upload the file
-      obj.upload_file(params[:file].tempfile)
+      obj.upload_file(params[:file].tempfile, acl: 'public-read')
 
       #Create an object for the upload
       if obj.public_url && @memorial.update({image: name})
