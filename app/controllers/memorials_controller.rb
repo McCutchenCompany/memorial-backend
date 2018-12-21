@@ -116,7 +116,7 @@ class MemorialsController < ApplicationController
   def remove_image
     if @memorial
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
+      s3_response = s3.bucket(ENV['S3_BUCKET']).object(URI.encode(params[:file])).delete()
 
       if @memorial.update({image: nil})
         render json: @memorial
