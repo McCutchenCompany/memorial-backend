@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     member do
       post 'location'
       post 'timeline'
+      post 'image'
+      delete 'remove_image'
     end
   end
   resources :public_memorials, only: [:index, :show]

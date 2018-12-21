@@ -17,6 +17,8 @@ gem 'puma', '~> 3.11'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'jwt', '1.5.6'
 
+gem 'aws-sdk', '~> 3'
+
 # https://github.com/zipmark/rspec_api_documentation
 gem 'rspec_api_documentation'
 
