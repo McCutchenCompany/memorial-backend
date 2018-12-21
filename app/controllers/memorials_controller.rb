@@ -93,7 +93,7 @@ class MemorialsController < ApplicationController
   # POST /memorials/:id/image
   def image
     if @memorial
-      filename = URI.encode(params[:file].original_filename).gsub('%', '+');
+      filename = URI.encode(params[:file].original_filename).gsub('%', '');
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
       name = params[:id] + '/' + filename
       
