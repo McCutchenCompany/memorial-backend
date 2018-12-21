@@ -1,7 +1,8 @@
 class MemorialsController < ApplicationController
+  require 'uri'
   include Secured
   before_action :set_user
-  before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline, :image]
+  before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline, :image, :remove_image]
 
   # GET /memorials
   def index
@@ -93,9 +94,7 @@ class MemorialsController < ApplicationController
   def image
     if @memorial
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      name = params[:id] + '/' + params[:file].original_filename
-      puts '---------------'
-      puts @memorial
+      name = params[:id] + '/' + URI.encode(params[:file].original_filename)
       
       obj = s3.bucket(ENV['S3_BUCKET']).object(name)
 
@@ -115,7 +114,18 @@ class MemorialsController < ApplicationController
 
   # DELETE /memorials/:id/remove_image
   def remove_image
+    if @memorial
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
 
+      if @memorial.update({image: nil})
+        render json: @memorial
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
+    else 
+      render json: {error: 'The memorial does not exist'}, status: :unprocessable_entity
+    end
   end
 
   # DELETE /memorials/1
