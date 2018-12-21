@@ -102,7 +102,7 @@ class MemorialsController < ApplicationController
       obj.upload_file(params[:file].tempfile, acl: 'public-read')
 
       #Create an object for the upload
-      if obj.public_url && @memorial.update({image: params[:id] + '/' + URI.encode(params[:file].original_filename)})
+      if obj.public_url && @memorial.update({image: name})
         render json: @memorial
       else
         render json: @memorial.errors, status: :unprocessable_entity
