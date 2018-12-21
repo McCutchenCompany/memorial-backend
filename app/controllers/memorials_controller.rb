@@ -93,8 +93,9 @@ class MemorialsController < ApplicationController
   # POST /memorials/:id/image
   def image
     if @memorial
+      filename = URI.encode(params[:file].original_filename).gsub('%', '+');
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      name = params[:id] + '/' + params[:file].original_filename
+      name = params[:id] + '/' + filename
       
       obj = s3.bucket(ENV['S3_BUCKET']).object(name)
 
@@ -116,7 +117,7 @@ class MemorialsController < ApplicationController
   def remove_image
     if @memorial
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      s3_response = s3.bucket(ENV['S3_BUCKET']).object(URI.encode(params[:file])).delete()
+      s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
 
       if @memorial.update({image: nil})
         render json: @memorial
