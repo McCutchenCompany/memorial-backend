@@ -53,7 +53,15 @@ class TimelinesController < ApplicationController
 
       #Create an object for the upload
       if obj.public_url && @timeline.update({asset_link: name, asset_type: params[:asset_type]})
-        render json: @timeline
+        @memorial = Memorial.find(@timeline[:memorial_id])
+        @location = @memorial.location
+        @fulltimeline = @memorial.timeline.order(:date)
+        @response = {
+          memorial: @memorial,
+          location: @location,
+          timeline: @fulltimeline
+        }
+        render json: @response
       else
         render json: @timeline.errors, status: :unprocessable_entity
       end
@@ -68,7 +76,15 @@ class TimelinesController < ApplicationController
       s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
 
       if @timeline.update({asset_link: nil, asset_type: nil})
-        render json: @timeline
+        @memorial = Memorial.find(@timeline[:memorial_id])
+        @location = @memorial.location
+        @fulltimeline = @memorial.timeline.order(:date)
+        @response = {
+          memorial: @memorial,
+          location: @location,
+          timeline: @fulltimeline
+        }
+        render json: @response
       else
         render json: @timeline.errors, status: :unprocessable_entity
       end
