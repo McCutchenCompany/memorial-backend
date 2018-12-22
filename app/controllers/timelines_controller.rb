@@ -1,5 +1,6 @@
 class TimelinesController < ApplicationController
-  before_action :set_timeline, only: [:show, :update, :destroy]
+  include Secured
+  before_action :set_timeline, only: [:show, :update, :destroy, :file, :remove_file]
 
   # GET /timelines
   def index
@@ -38,6 +39,44 @@ class TimelinesController < ApplicationController
     @timeline.destroy
   end
 
+  # POST /timelines/:id/file
+  def file
+    if @timeline
+      filename = URI.encode(params[:file].original_filename).gsub('%', '');
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      name = @timeline[:memorial_id] + '/' + params[:id] + '/' + filename
+      
+      obj = s3.bucket(ENV['S3_BUCKET']).object(name)
+
+      # Upload the file
+      obj.upload_file(params[:file].tempfile, acl: 'public-read')
+
+      #Create an object for the upload
+      if obj.public_url && @timeline.update({asset_link: name, asset_type: params[:asset_type]})
+        render json: @timeline
+      else
+        render json: @timeline.errors, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'The timeline does not exist'}, status: :unprocessable_entity
+    end
+  end
+
+  def remove_file
+    if @timeline
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
+
+      if @timeline.update({asset_link: nil, asset_type: nil})
+        render json: @timeline
+      else
+        render json: @timeline.errors, status: :unprocessable_entity
+      end
+    else 
+      render json: {error: 'The timeline does not exist'}, status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_timeline
@@ -46,6 +85,6 @@ class TimelinesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def timeline_params
-      params.require(:timeline).permit(:memorial_id, :date, :date_format, :description, :asset_link, :asset_type)
+      params.require(:timeline).permit(:memorial_id, :date, :date_format, :description, :asset_link, :asset_type, :file)
     end
 end

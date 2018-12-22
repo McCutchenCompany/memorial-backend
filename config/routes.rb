@@ -8,7 +8,12 @@ Rails.application.routes.draw do
       get 'profile'
     end
   end
-  resources :timelines
+  resources :timelines do
+    member do
+      post 'file'
+      delete 'remove_file'
+    end
+  end
   resources :locations do
     collection do
       get 'in_range'
