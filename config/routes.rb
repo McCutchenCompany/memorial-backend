@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       post 'timeline'
       post 'image'
       delete 'remove_image'
+      patch 'replace_image'
     end
   end
   resources :public_memorials, only: [:index, :show]
