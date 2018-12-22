@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_14_223838) do
+ActiveRecord::Schema.define(version: 2018_12_22_142446) do
 
   create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "memorial_id"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 2018_12_14_223838) do
     t.string "asset_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title"
+    t.string "event"
   end
 
   create_table "users", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
