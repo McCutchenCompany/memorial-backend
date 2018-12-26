@@ -11,7 +11,7 @@ class PublicMemorialsController < ApplicationController
     # GET /memorials/1
     def show
       @location = @memorial.location
-      @timeline = @memorial.timeline.order(:date)
+      @timeline = @memorial.timeline.where.not(date: nil).order(:date)
       @response = {
         memorial: @memorial,
         location: @location,
