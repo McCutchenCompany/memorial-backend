@@ -17,7 +17,7 @@ class MemorialsController < ApplicationController
       render json: {error: 'This memorial does not belong to you'}, status: 401
     else
       @location = @memorial.location
-      @timeline = @memorial.timeline.order(:date)
+      @timeline = @memorial.timeline.reverse
       @response = {
         memorial: @memorial,
         location: @location,
