@@ -75,7 +75,6 @@ class MemorialsController < ApplicationController
 
   # POST /memorials/:id/timeline
   def timeline
-    params.require(:date)
     if Timeline.create({
         memorial_id: @memorial[:uuid],
         description: params[:description],
