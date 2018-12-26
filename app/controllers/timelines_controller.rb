@@ -101,6 +101,6 @@ class TimelinesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def timeline_params
-      params.require(:timeline).permit(:memorial_id, :date, :date_format, :description, :asset_link, :asset_type, :file)
+      params.require(:timeline).permit(:memorial_id, :date, :date_format, :description, :asset_link, :asset_type, :file, :event, :title)
     end
 end

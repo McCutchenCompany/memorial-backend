@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     member do
       post 'location'
       post 'timeline'
+      patch 'update_timeline'
       post 'image'
       delete 'remove_image'
       patch 'replace_image'

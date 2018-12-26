@@ -2,7 +2,7 @@ class MemorialsController < ApplicationController
   require 'uri'
   include Secured
   before_action :set_user
-  before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline, :image, :remove_image, :replace_image]
+  before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline, :image, :remove_image, :replace_image, :update_timeline]
 
   # GET /memorials
   def index
@@ -86,6 +86,15 @@ class MemorialsController < ApplicationController
       render json: @memorial.timeline
     else
       render json: @memorial.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH /memorials/:id/update_timeline
+  def update_timeline
+    if Timeline.bulk_update(params[:timelines], @memorial[:uuid])
+      render json: @memorial.timeline
+    else
+      render json: {error: 'Unable to save'}, status: :unprocessable_entity
     end
   end
 
@@ -176,7 +185,8 @@ class MemorialsController < ApplicationController
         :asset_link,
         :asset_type,
         :user_id,
-        :file
+        :file,
+        :timelines
       )
     end
 end
