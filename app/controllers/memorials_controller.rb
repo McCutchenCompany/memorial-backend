@@ -66,9 +66,9 @@ class MemorialsController < ApplicationController
     else
       @location = Location.new({memorial_id: @memorial[:uuid], latitude: params[:latitude], longitude: params[:longitude], description: params[:description]})
       if @location.save
-        render json: @memorial.location, status: :created
+        render json: @location, status: :created
       else
-        render json: @memorial.errors, status: :unprocessable_entity
+        render json: @location.errors, status: :unprocessable_entity
       end
     end
   end
