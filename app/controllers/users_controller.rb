@@ -43,7 +43,14 @@ class UsersController < ApplicationController
     if @user = User.find_by(auth0_id: auth_token[0]['sub'])
       render json: {user: @user, memorials: @user.memorial}
     else
-      @user = User.new({auth0_id: auth_token[0]['sub'], licenses: 0, licenses_in_use: 0})
+      @user = User.new({
+        auth0_id: auth_token[0]['sub'],
+        licenses: 0,
+        licenses_in_use: 0,
+        first_name: params[:first_name],
+        last_name: params[:last_name],
+        email: params[:email]
+      })
       if @user.save
         render json: {user: @user, memorials: @user.memorial}, status: :created, location: @user
       else
