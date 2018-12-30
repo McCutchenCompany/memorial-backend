@@ -2,7 +2,18 @@ class MemorialsController < ApplicationController
   require 'uri'
   include Secured
   before_action :set_user
-  before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline, :image, :remove_image, :replace_image, :update_timeline]
+  before_action :set_memorial, only: [
+    :show,
+    :update,
+    :destroy,
+    :location,
+    :timeline,
+    :image,
+    :remove_image,
+    :replace_image,
+    :update_timeline,
+    :memories
+  ]
 
   # GET /memorials
   def index
@@ -153,6 +164,34 @@ class MemorialsController < ApplicationController
     end
   end
 
+  # POST /memorials/:id/memories
+  def memories
+    if @memorial
+      if @memorial.memory.create({
+        user_id: @user[:uuid],
+        description: params[:description],
+        title: params[:title],
+        published: true
+      })
+        render json: Memory.map_names(@memorial.memory)
+      else
+        render json: @memorial.error, status: :unprocessable_entity
+      end
+    else
+      @memorial = Memorial.find_by(uuid: params[:id])
+      if @memorial.memory.create({
+        user_id: @user[:uuid],
+        description: params[:description],
+        title: params[:title],
+        published: false
+      })
+        render json: Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
+      else
+        render json: @memorial.error, status: :unprocessable_entity
+      end
+    end
+  end
+
   # DELETE /memorials/1
   def destroy
     @memorial.destroy
@@ -186,7 +225,8 @@ class MemorialsController < ApplicationController
         :asset_type,
         :user_id,
         :file,
-        :timelines
+        :timelines,
+        :title
       )
     end
 end
