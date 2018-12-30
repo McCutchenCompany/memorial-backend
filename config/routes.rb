@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :memories
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
   
@@ -23,6 +24,7 @@ Rails.application.routes.draw do
     member do
       post 'location'
       post 'timeline'
+      post 'memories'
       patch 'update_timeline'
       post 'image'
       delete 'remove_image'
