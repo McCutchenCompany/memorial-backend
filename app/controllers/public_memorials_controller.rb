@@ -14,7 +14,11 @@ class PublicMemorialsController < ApplicationController
       if @memorial[:user_id] == @user[:uuid]
         @memories = Memory.map_names(@memorial.memory)
       else
-        @memories = Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
+        if @memorial[:public_post]
+          @memories = Memory.map_names(@memorial.memory);
+        else
+          @memories = Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
+        end
       end
       @location = @memorial.location
       @timeline = @memorial.timeline.where.not(date: nil).sort_by &:date
