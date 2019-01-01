@@ -229,7 +229,8 @@ class MemorialsController < ApplicationController
         :file,
         :timelines,
         :title,
-        :published
+        :published,
+        :public_post
       )
     end
 end
