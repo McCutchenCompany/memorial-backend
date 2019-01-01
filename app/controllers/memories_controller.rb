@@ -58,6 +58,6 @@ class MemoriesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def memory_params
-      params.require(:memory).permit(:published)
+      params.require(:memory).permit(:published, :denied)
     end
 end
