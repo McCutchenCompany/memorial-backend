@@ -4,7 +4,7 @@ class PublicMemorialsController < ApplicationController
 
     # GET /public_memorials
     def index
-      @memorials = Memorial.all
+      @memorials = Memorial.where(published: true)
   
       render json: @memorials
     end
@@ -20,15 +20,19 @@ class PublicMemorialsController < ApplicationController
           @memories = Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
         end
       end
-      @location = @memorial.location
-      @timeline = @memorial.timeline.where.not(date: nil).sort_by &:date
-      @response = {
-        memorial: @memorial,
-        location: @location,
-        timeline: @timeline,
-        memories: @memories
-      }
-      render json: @response
+      if @memorial[:published] || @memorial[:user_id] == @user[:uuid]
+        @location = @memorial.location
+        @timeline = @memorial.timeline.where.not(date: nil).sort_by &:date
+        @response = {
+          memorial: @memorial,
+          location: @location,
+          timeline: @timeline,
+          memories: @memories
+        }
+        render json: @response
+      else
+        render json: {error: "The memorial either does not exist or is not yet published"}
+      end
     end
 
 
