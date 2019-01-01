@@ -31,7 +31,7 @@ class PublicMemorialsController < ApplicationController
         }
         render json: @response
       else
-        render json: {error: "The memorial either does not exist or is not yet published"}
+        render json: {error: "The memorial either does not exist or is not yet published"}, status: 504
       end
     end
 
