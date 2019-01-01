@@ -226,7 +226,8 @@ class MemorialsController < ApplicationController
         :user_id,
         :file,
         :timelines,
-        :title
+        :title,
+        :published
       )
     end
 end
