@@ -29,10 +29,12 @@ class MemorialsController < ApplicationController
     else
       @location = @memorial.location
       @timeline = @memorial.timeline.reverse
+      @memories = @memorial.memory
       @response = {
         memorial: @memorial,
         location: @location,
-        timeline: @timeline
+        timeline: @timeline,
+        memories: @memories
       }
       render json: @response
     end
