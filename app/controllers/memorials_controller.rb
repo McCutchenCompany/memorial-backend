@@ -29,7 +29,7 @@ class MemorialsController < ApplicationController
     else
       @location = @memorial.location
       @timeline = @memorial.timeline.reverse
-      @memories = @memorial.memory
+      @memories = Memory.map_names(@memorial.memory)
       @response = {
         memorial: @memorial,
         location: @location,
