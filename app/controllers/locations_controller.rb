@@ -47,7 +47,13 @@ class LocationsController < ApplicationController
       left: range_params[:left]
     }
     if @locations = Location.find_in_range(range_params)
-      render json: @locations
+      locations = []
+      @locations.each { |location|
+        entry = location.as_json
+        entry[:memorial] = location.memorial
+        locations.push(entry)
+      }
+      render json: locations
     else
       render json: []
     end
