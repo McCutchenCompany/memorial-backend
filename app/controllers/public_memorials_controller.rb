@@ -35,6 +35,14 @@ class PublicMemorialsController < ApplicationController
       end
     end
 
+    def search
+      if records = Memorial.search(params)
+        render json: records
+      else
+        render json: []
+      end
+    end
+
 
   private
   # Use callbacks to share common setup or constraints between actions.

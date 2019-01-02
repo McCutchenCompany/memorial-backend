@@ -31,6 +31,10 @@ Rails.application.routes.draw do
       patch 'replace_image'
     end
   end
-  resources :public_memorials, only: [:index, :show]
+  resources :public_memorials, only: [:index, :show] do
+    collection do
+      get 'search'
+    end
+  end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
