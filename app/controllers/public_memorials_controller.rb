@@ -6,7 +6,7 @@ class PublicMemorialsController < ApplicationController
     def index
       @memorials = Memorial.where(published: true)
   
-      render json: @memorials
+      render json: Memorial.add_location(@memorials)
     end
   
     # GET /public_memorials/1
@@ -37,7 +37,7 @@ class PublicMemorialsController < ApplicationController
 
     def search
       if records = Memorial.search(params)
-        render json: records
+        render json: Memorial.add_location(records)
       else
         render json: []
       end
