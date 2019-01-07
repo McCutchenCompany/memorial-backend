@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :memorial
   has_many :user
+  has_many :charge
 
   def self.can_create(user)
     puts 'Checked if user can create'

@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   resources :memories
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
+
+  post '/billing/purchase', to: 'billing#purchase'
+  post '/billing/generate_discount', to: 'billing#generate_discounts'
+  get '/billing/available_discount', to: 'billing#available_discounts'
   
   resources :users do
     collection do

@@ -34,4 +34,5 @@ class Memorial < ApplicationRecord
     }
     with_locations
   end
+
 end
