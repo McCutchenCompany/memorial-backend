@@ -4,28 +4,37 @@ class BillingController < ApplicationController
   before_action :set_user
 
   def purchase
-    price = 6000 * params[:quantity]
+    price = 6000
     if (params.has_key?(:discount)) && params[:discount]
       price =  (price - (price * Discount.give_discount(params[:discount], @user[:uuid]))).round
     end
-
-    Stripe.api_key = ENV['STRIPE_KEY'];
-
-    token = params[:stripeToken]
-
-    begin 
-      stripeCharge = Stripe::Charge.create({
-        amount: price,
-        currency: 'usd',
-        description: 'Test charge',
-        source: token
-      });
-    rescue Stripe::CardError => e
-      error = (e.to_s.sub /\(([^)]+)\)/, '').sub /\(([^)]+)\)/, ''
-      render json: {error: error || "There was an error processing your payment"}, status: 500
+    if params[:quantity] > 1
+      price = price + ((params[:quantity] - 1) * 6000)
     end
-    if stripeCharge
-      @charge = @user.charge.new({charge: stripeCharge[:amount]})
+
+    unless price == 0
+      Stripe.api_key = ENV['STRIPE_KEY'];
+
+      token = params[:stripeToken]
+
+      begin 
+        stripeCharge = Stripe::Charge.create({
+          amount: price,
+          currency: 'usd',
+          description: 'Test charge',
+          source: token
+        });
+      rescue Stripe::CardError => e
+        error = (e.to_s.sub /\(([^)]+)\)/, '').sub /\(([^)]+)\)/, ''
+        render json: {error: error || "There was an error processing your payment"}, status: 500
+      end
+    end
+    if stripeCharge || price == 0
+      if stripeCharge
+        @charge = @user.charge.new({charge: stripeCharge[:amount]})
+      else
+        @charge = @user.charge.new({charge: 0})
+      end
       @charge.save
       new_licenses = @user[:licenses] + params[:quantity];
       if @user.update({licenses: new_licenses})
@@ -36,6 +45,7 @@ class BillingController < ApplicationController
         end
       end
     end
+
   end
 
   def generate_discounts
@@ -73,6 +83,15 @@ class BillingController < ApplicationController
     end
   end
 
+  def check_discount
+    if @discount = Discount.where(uuid: params[:id], available: true).select("uuid, percent").map{|discount| {percent: discount[:percent] * 100, code: discount[:uuid]}}[0]
+      render json: @discount
+    elsif @discount = Discount.where(uuid: params[:id], available: false)[0]
+      render json: {message: "This code has already been used"}, status: 401
+    else
+      render json: {message: "This code does not exist"}, status: 404
+    end
+  end
 
   def create_memorials(quantity)
     @memorials = []

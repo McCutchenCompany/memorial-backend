@@ -4,9 +4,16 @@ Rails.application.routes.draw do
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
 
-  post '/billing/purchase', to: 'billing#purchase'
-  post '/billing/generate_discount', to: 'billing#generate_discounts'
-  get '/billing/available_discount', to: 'billing#available_discounts'
+  resources :billing do
+    collection do
+      post 'purchase'
+      post 'generate_discounts'
+      get 'available_discounts'
+    end
+    member do
+      get 'check_discount'
+    end
+  end
   
   resources :users do
     collection do
