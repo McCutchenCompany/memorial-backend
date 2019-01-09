@@ -12,35 +12,39 @@ class BillingController < ApplicationController
       price = price + ((params[:quantity] - 1) * 6000)
     end
 
-    unless price == 0
-      Stripe.api_key = ENV['STRIPE_KEY'];
+    if price / 100 != params[:price]
+      render json: {error: "The expected price did not match the calculated price"}, status: 500
+    else
+      unless price == 0
+        Stripe.api_key = ENV['STRIPE_KEY'];
 
-      token = params[:stripeToken]
+        token = params[:stripeToken]
 
-      begin 
-        stripeCharge = Stripe::Charge.create({
-          amount: price,
-          currency: 'usd',
-          description: 'Test charge',
-          source: token
-        });
-      rescue Stripe::CardError => e
-        error = (e.to_s.sub /\(([^)]+)\)/, '').sub /\(([^)]+)\)/, ''
-        render json: {error: error || "There was an error processing your payment"}, status: 500
+        begin 
+          stripeCharge = Stripe::Charge.create({
+            amount: price,
+            currency: 'usd',
+            description: 'Test charge',
+            source: token
+          });
+        rescue Stripe::CardError => e
+          error = (e.to_s.sub /\(([^)]+)\)/, '').sub /\(([^)]+)\)/, ''
+          render json: {error: error || "There was an error processing your payment"}, status: 500
+        end
       end
-    end
-    if stripeCharge || price == 0
-      if stripeCharge
-        @charge = @user.charge.new({charge: stripeCharge[:amount]})
-      else
-        @charge = @user.charge.new({charge: 0})
-      end
-      @charge.save
-      new_licenses = @user[:licenses] + params[:quantity];
-      if @user.update({licenses: new_licenses})
-        if @memorials = create_memorials(params[:quantity])
-          if @user.update({licenses_in_use: @user[:licenses_in_use] + params[:quantity]})
-            render json: {price: price, licenses: @user[:licenses], memorials: @memorials}
+      if stripeCharge || price == 0
+        if stripeCharge
+          @charge = @user.charge.new({charge: stripeCharge[:amount]})
+        else
+          @charge = @user.charge.new({charge: 0})
+        end
+        @charge.save
+        new_licenses = @user[:licenses] + params[:quantity];
+        if @user.update({licenses: new_licenses})
+          if @memorials = create_memorials(params[:quantity])
+            if @user.update({licenses_in_use: @user[:licenses_in_use] + params[:quantity]})
+              render json: {price: price, licenses: @user[:licenses], memorials: @memorials}
+            end
           end
         end
       end
