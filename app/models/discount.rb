@@ -1,12 +1,18 @@
 class Discount < ApplicationRecord
   include UUID
 
-  def self.give_discount(discount, user_id)
+  def self.give_discount(quantity, price, discount, user_id)
     if (@discount = Discount.find_by(uuid: discount)) && @discount[:available]
       if @discount[:one_time_use]
         @discount.update({available: false, user_id: user_id})
+        @price = price - (price * @discount[:percent])
+        @price = @price + (quantity - 1) * price
+        @price
+      else
+        total = quantity * price
+        @price = total - (total * @discount[:percent])
       end
-      @discount[:percent]
+      return @price
     else
       0
     end

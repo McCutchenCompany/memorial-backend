@@ -6,9 +6,8 @@ class BillingController < ApplicationController
   def purchase
     price = 6000
     if (params.has_key?(:discount)) && params[:discount]
-      price =  (price - (price * Discount.give_discount(params[:discount], @user[:uuid]))).round
-    end
-    if params[:quantity] > 1
+      price = Discount.give_discount(params[:quantity], price, params[:discount], @user[:uuid]).round
+    elsif params[:quantity] > 1
       price = price + ((params[:quantity] - 1) * 6000)
     end
 
