@@ -11,7 +11,8 @@ class Memorial < ApplicationRecord
     records = all
     if params[:query]
       records = records.where(
-                  'LOWER(CONCAT_WS(" ", first_name, middle_name, last_name)) LIKE :search', search: "%#{params[:query].downcase}%"
+                  'LOWER(CONCAT_WS(" ", first_name, middle_name, last_name)) LIKE :search
+                   OR LOWER(CONCAT_WS(" ", first_name, last_name)) LIKE :search', search: "%#{params[:query].downcase}%"
                 ).where.not(published: false)
 
     end
