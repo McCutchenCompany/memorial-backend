@@ -1,6 +1,6 @@
 class TimelinesController < ApplicationController
   include Secured
-  before_action :set_timeline, only: [:show, :update, :destroy, :file, :remove_file]
+  before_action :set_timeline, only: [:show, :update, :destroy, :file, :remove_file, :replace_file]
 
   # GET /timelines
   def index
@@ -90,6 +90,21 @@ class TimelinesController < ApplicationController
       end
     else 
       render json: {error: 'The timeline does not exist'}, status: :unprocessable_entity
+    end
+  end
+
+  def replace_file
+    if @timeline[:asset_link]
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      s3_response = s3.bucket(ENV['S3_BUCKET']).object(@timeline[:asset_link]).delete()
+
+      if @timeline.update({asset_link: nil, asset_type: nil})
+        file
+      else
+        render json: @timeline.errors, status: :unprocessable_entity
+      end
+    else 
+      render json: {error: "The timeline entry either doesn't exist or does not have an asset"}, statsu: 404
     end
   end
 

@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   resources :timelines do
     member do
       post 'file'
+      patch 'replace_file'
       delete 'remove_file'
     end
   end
