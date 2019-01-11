@@ -55,10 +55,9 @@ class BillingController < ApplicationController
   def generate_discounts
     if (auth_token[0]['sub'] == 'google-oauth2|108449982214054878210')
       percent = params[:percent].to_d / 100
-      puts percent
       discount_params = {
         percent: percent,
-        one_time_use: params[:one_time_use] || true
+        one_time_use: params.has_key?(:one_time_use) ? params[:one_time_use] : true
       }
       if @discounts = Discount.generate(params[:num], discount_params)
         render json: @discounts, status: :created
@@ -88,7 +87,7 @@ class BillingController < ApplicationController
   end
 
   def check_discount
-    if @discount = Discount.where(uuid: params[:id], available: true).select("uuid, percent").map{|discount| {percent: discount[:percent] * 100, code: discount[:uuid]}}[0]
+    if @discount = Discount.where(uuid: params[:id], available: true).select("uuid, percent, one_time_use").map{|discount| {percent: discount[:percent] * 100, code: discount[:uuid], one_time_use: discount[:one_time_use]}}[0]
       render json: @discount
     elsif @discount = Discount.where(uuid: params[:id], available: false)[0]
       render json: {message: "This code has already been used"}, status: 401
