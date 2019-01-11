@@ -36,7 +36,20 @@ class TimelinesController < ApplicationController
 
   # DELETE /timelines/1
   def destroy
-    @timeline.destroy
+    if @timeline[:asset_type] == 'image' && @timeline[:asset_link]
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      if s3_response = s3.bucket(ENV['S3_BUCKET']).object(@timeline[:asset_link]).delete()
+        @memorial = @timeline.memorial
+        @timeline.destroy
+        render json: @memorial.timeline.order(:date)
+      else
+        render json: {error: 'There was an error removing the image before deleting the entry'}, status: 500
+      end
+    else
+      @memorial = @timeline.memorial
+      @timeline.destroy
+      render json: @memorial.timeline.order(:date)
+    end
   end
 
   # POST /timelines/:id/file
