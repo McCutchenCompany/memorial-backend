@@ -4,6 +4,13 @@ Rails.application.routes.draw do
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
 
+  resources :response do
+    collection do
+      post 'support'
+      post 'bug'
+    end
+  end
+
   resources :billing do
     collection do
       post 'purchase'

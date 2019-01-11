@@ -21,6 +21,8 @@ gem 'aws-sdk', '~> 3'
 
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
+gem 'sendgrid-ruby'
+
 # https://github.com/zipmark/rspec_api_documentation
 gem 'rspec_api_documentation'
 
