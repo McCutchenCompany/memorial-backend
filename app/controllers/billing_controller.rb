@@ -4,11 +4,11 @@ class BillingController < ApplicationController
   before_action :set_user
 
   def purchase
-    price = 6000
+    initialPrice = 6000
     if (params.has_key?(:discount)) && params[:discount]
-      price = Discount.give_discount(params[:quantity], price, params[:discount], @user[:uuid]).round
+      price = Discount.give_discount(params[:quantity], initialPrice, params[:discount], @user[:uuid]).round
     elsif params[:quantity] > 1
-      price = price + ((params[:quantity] - 1) * 6000)
+      price = price + ((params[:quantity] - 1) * initialPrice)
     end
 
     if price / 100 != params[:price]
