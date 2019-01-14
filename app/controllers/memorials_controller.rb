@@ -71,13 +71,22 @@ class MemorialsController < ApplicationController
   # POST /memorials/:id/location
   def location
     if @memorial.location
-      if @memorial.location.update({latitude: params[:latitude], longitude: params[:longitude], description: params[:description]})
+      if @memorial.location.update({
+        latitude: params[:latitude],
+        longitude: params[:longitude],
+        description: reverse_geocode
+      })
         render json: @memorial.location
       else
         render json: @memorial.errors, status: :unprocessable_entity
       end
     else
-      @location = Location.new({memorial_id: @memorial[:uuid], latitude: params[:latitude], longitude: params[:longitude], description: params[:description]})
+      @location = Location.new({
+        memorial_id: @memorial[:uuid],
+        latitude: params[:latitude],
+        longitude: params[:longitude],
+        description: reverse_geocode
+      })
       if @location.save
         render json: @location, status: :created
       else

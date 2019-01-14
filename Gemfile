@@ -28,6 +28,7 @@ gem 'rspec_api_documentation'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
+gem 'httparty'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
