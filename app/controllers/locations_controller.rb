@@ -50,7 +50,8 @@ class LocationsController < ApplicationController
       locations = []
       @locations.each { |location|
         entry = location.as_json
-        entry[:memorial] = location.memorial
+        entry[:memorial] = location.memorial.as_json
+        entry[:memorial][:location] = location[:description]
         locations.push(entry)
       }
       render json: locations

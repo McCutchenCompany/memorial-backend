@@ -27,9 +27,11 @@ class Memorial < ApplicationRecord
       if memorial.location
         entry[:latitude] = memorial.location[:latitude]
         entry[:longitude] = memorial.location[:longitude]
+        entry[:location] = memorial.location[:description]
       else 
         entry[:latitude] = nil
         entry[:longitude] = nil
+        entry[:location] = nil
       end
       with_locations.push(entry)
     }
