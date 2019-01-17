@@ -43,7 +43,14 @@ class MemoriesController < ApplicationController
 
   # DELETE /memories/1
   def destroy
-    @memory.destroy
+    if @memory[:user_id] == @user[:uuid]
+      @memorial = @memory.memorial
+      @memory.destroy
+      @memories = Memory.map_names(@memorial.memory)
+      render json: @memories
+    else
+      render json: {error: "You do not have permission to delete this memory"}
+    end
   end
 
   private
