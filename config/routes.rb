@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :memories
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
+  get 'find_places', to: 'application#find_places'
 
   resources :response do
     collection do

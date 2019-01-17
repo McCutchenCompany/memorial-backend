@@ -17,5 +17,20 @@ class ApplicationController < ActionController::API
       render json: {error: "Trouble getting the formatted address"}, status: :unprocessable_entity
     end
   end
+
+  def find_places
+    searchParams = "input=" + params[:query] + "&inputtype=textquery" + "&fields=geometry/location" + "&key=" + ENV['GOOGLE_KEY']
+    if @result = HTTParty.get('https://maps.googleapis.com/maps/api/place/findplacefromtext/json?' + searchParams,
+      headers: {'Content-Type': 'application/json'})
+      if location = @result["candidates"][0]["geometry"]["location"]
+        location["address"] = params[:query]
+        render json: location
+      else
+        render json: {}
+      end
+    else
+      render json: {error: "Trouble finding location"}, status: :unprocessable_entity
+    end
+  end
   
 end
