@@ -36,8 +36,25 @@ class MemoriesController < ApplicationController
       else
         render json: @memory.errors, status: :unprocessable_entity
       end
+    elsif @memory[:user_id] == @user[:uuid]
+      edit
     else
       render json: {error: "You do not have permission to change this memory"}, status: 402
+    end
+  end
+
+  def edit
+    unless @memory[:user_id] != @user[:uuid]
+      if @memory.update({
+        title: params[:title],
+        description: params[:description]
+      })
+        @memorial = @memory.memorial
+        res = Memory.map_names(@memorial.memory)
+        render json: res
+      else  
+        render json: {error: "Error occurred while editing memory"}, status: :unprocessable_entity
+      end
     end
   end
 
@@ -65,6 +82,6 @@ class MemoriesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def memory_params
-      params.require(:memory).permit(:published, :denied)
+      params.require(:memory).permit(:published, :denied, :title, :description)
     end
 end
