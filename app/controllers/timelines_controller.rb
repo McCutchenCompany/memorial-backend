@@ -28,7 +28,8 @@ class TimelinesController < ApplicationController
   # PATCH/PUT /timelines/1
   def update
     if @timeline.update(timeline_params)
-      render json: @timeline
+      @memorial = @timeline.memorial
+      render json: @memorial.timeline
     else
       render json: @timeline.errors, status: :unprocessable_entity
     end
