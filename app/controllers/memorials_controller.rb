@@ -133,7 +133,7 @@ class MemorialsController < ApplicationController
       obj.upload_file(params[:file].tempfile, acl: 'public-read')
 
       #Create an object for the upload
-      if obj.public_url && @memorial.update({image: name})
+      if obj.public_url && @memorial.update({image: name, posX: 0, posY: 0, scale: 100, rot: 0})
         render json: @memorial
       else
         render json: @memorial.errors, status: :unprocessable_entity
@@ -149,7 +149,7 @@ class MemorialsController < ApplicationController
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
       s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
 
-      if @memorial.update({image: nil})
+      if @memorial.update({image: nil, posX: 0, posY: 0, scale: 100, rot: 0})
         render json: @memorial
       else
         render json: @memorial.errors, status: :unprocessable_entity
@@ -165,7 +165,7 @@ class MemorialsController < ApplicationController
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
       s3_response = s3.bucket(ENV['S3_BUCKET']).object(@memorial[:image]).delete()
 
-      if @memorial.update({image: nil})
+      if @memorial.update({image: nil, posX: 0, posY: 0, scale: 100, rot: 0})
         image
       else
         render json: @memorial.errors, status: :unprocessable_entity
@@ -239,7 +239,11 @@ class MemorialsController < ApplicationController
         :timelines,
         :title,
         :published,
-        :public_post
+        :public_post,
+        :posX,
+        :posY,
+        :scale,
+        :rot
       )
     end
 end

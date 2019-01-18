@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_06_040851) do
+ActiveRecord::Schema.define(version: 2019_01_18_163630) do
 
   create_table "charges", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "user_id"
@@ -50,6 +50,10 @@ ActiveRecord::Schema.define(version: 2019_01_06_040851) do
     t.text "description"
     t.boolean "public_post", default: true
     t.boolean "published", default: false
+    t.integer "posY", default: 0
+    t.integer "posX", default: 0
+    t.integer "scale", default: 100
+    t.integer "rot", default: 0
   end
 
   create_table "memories", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -74,6 +78,10 @@ ActiveRecord::Schema.define(version: 2019_01_06_040851) do
     t.datetime "updated_at", null: false
     t.string "title"
     t.string "event"
+    t.integer "posY", default: 0
+    t.integer "posX", default: 0
+    t.integer "scale", default: 100
+    t.integer "rot", default: 0
   end
 
   create_table "users", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

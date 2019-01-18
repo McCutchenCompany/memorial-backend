@@ -65,7 +65,7 @@ class TimelinesController < ApplicationController
       obj.upload_file(params[:file].tempfile, acl: 'public-read')
 
       #Create an object for the upload
-      if obj.public_url && @timeline.update({asset_link: name, asset_type: params[:asset_type]})
+      if obj.public_url && @timeline.update({asset_link: name, asset_type: params[:asset_type], posX: 0, posY: 0, scale: 100, rot: 0})
         @memorial = Memorial.find(@timeline[:memorial_id])
         @location = @memorial.location
         @fulltimeline = @memorial.timeline.order(:date)
@@ -88,7 +88,7 @@ class TimelinesController < ApplicationController
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
       s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
 
-      if @timeline.update({asset_link: nil, asset_type: nil})
+      if @timeline.update({asset_link: nil, asset_type: nil, posX: 0, posY: 0, scale: 100, rot: 0})
         @memorial = Memorial.find(@timeline[:memorial_id])
         @location = @memorial.location
         @fulltimeline = @memorial.timeline.order(:date)
@@ -111,7 +111,7 @@ class TimelinesController < ApplicationController
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
       s3_response = s3.bucket(ENV['S3_BUCKET']).object(@timeline[:asset_link]).delete()
 
-      if @timeline.update({asset_link: nil, asset_type: nil})
+      if @timeline.update({asset_link: nil, asset_type: nil, posX: 0, posY: 0, scale: 100, rot: 0})
         file
       else
         render json: @timeline.errors, status: :unprocessable_entity
@@ -129,6 +129,20 @@ class TimelinesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def timeline_params
-      params.require(:timeline).permit(:memorial_id, :date, :date_format, :description, :asset_link, :asset_type, :file, :event, :title)
+      params.require(:timeline).permit(
+        :memorial_id,
+        :date,
+        :date_format,
+        :description,
+        :asset_link,
+        :asset_type,
+        :file,
+        :event,
+        :title,
+        :posX,
+        :posY,
+        :scale,
+        :rot
+        )
     end
 end
