@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   resources :public_memorials, only: [:index, :show] do
     collection do
       get 'search'
+      get 'popular'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

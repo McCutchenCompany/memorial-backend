@@ -21,6 +21,7 @@ class PublicMemorialsController < ApplicationController
         end
       end
       if @memorial[:published] || @memorial[:user_id] == @user[:uuid]
+        Memorial.add_view(@memorial)
         @location = @memorial.location
         @timeline = @memorial.timeline.where.not(date: nil).sort_by &:date
         @response = {
@@ -43,6 +44,13 @@ class PublicMemorialsController < ApplicationController
       end
     end
 
+    def popular
+      if records = Memorial.reorder('views DESC').limit(5)
+        render json: Memorial.add_location(records)
+      else
+        render json: {error: "Could not determine the most viewed memorials"}, status: 500
+      end
+    end
 
   private
   # Use callbacks to share common setup or constraints between actions.

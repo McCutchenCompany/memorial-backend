@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_18_163630) do
+ActiveRecord::Schema.define(version: 2019_02_03_161708) do
 
   create_table "charges", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "user_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2019_01_18_163630) do
     t.integer "posX", default: 0
     t.integer "scale", default: 100
     t.integer "rot", default: 0
+    t.integer "views", default: 0
   end
 
   create_table "memories", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

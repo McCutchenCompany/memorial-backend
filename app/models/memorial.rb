@@ -38,4 +38,8 @@ class Memorial < ApplicationRecord
     with_locations
   end
 
+  def self.add_view(memorial)
+    memorial.update(views: memorial[:views] += 1)
+  end
+
 end
