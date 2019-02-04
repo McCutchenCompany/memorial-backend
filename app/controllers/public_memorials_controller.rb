@@ -45,7 +45,7 @@ class PublicMemorialsController < ApplicationController
     end
 
     def popular
-      if records = Memorial.reorder('views DESC').limit(5)
+      if records = Memorial.where(published: true).reorder('views DESC').limit(5)
         render json: Memorial.add_location(records)
       else
         render json: {error: "Could not determine the most viewed memorials"}, status: 500
