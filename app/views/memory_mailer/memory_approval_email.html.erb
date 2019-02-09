@@ -49,15 +49,8 @@
         text-decoration: none;
         color: black;
       }
-      .footer-fixer {
-        height: 300px;
-        margin-top: 36px;
-      }
       .footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        width: 100%;
         height: 300px;
         background: #0D2059;
       }
@@ -67,6 +60,7 @@
       .footer p {
         width: 80%;
         margin: 36px auto;
+        margin-top: 36px;
         font-size: 12px;
       }
     </style>
@@ -95,7 +89,7 @@
       <p>
         <%= @from.first_name %> <%= @from.last_name %> has submitted the following memory:
       </p>
-      <a class="memory-link" href="<%= ENV["PAGE_URL"] %>/create/<%= @memory.memorial_id %>/memories">
+      <a class="memory-link" href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">
       <div class="memory">
         <h3><%= @memory.title %></h3>
         <p>
@@ -104,14 +98,13 @@
       </div>
       </a>
       <p>
-        Visit <a href="<%= ENV["PAGE_URL"] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a> to approve or deny this memory.
+        Visit <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a> to approve or deny this memory.
       </p>
     </div>
-    <div class="footer-fixer"></div>
     <div class="footer">
       <p>
         Would you rather not have to approve all of the memories added to this memorial? Vist
-        <a href="<%= ENV["PAGE_URL"] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a>  and unchecking the box.
+        <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a>  and unchecking the box.
       </p>
     </div>
   </body>
