@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>BUG REPORT from <%= @user ? @user.first_name : "Anonymous" %> <%= @user ? @user.last_name : "user" %></h1>
+    <h3>
+      User Info:
+    </h3>
+    <ul>
+      <li>email <%= @user ? @user.email : @email %></li>
+      <li>auth0_id: <%= @user ? @user.auth0_id : nil %></li>
+      <li>uuid: <%= @user ? @user.uuid : nil %></li>
+      <li>licenses: <%= @user ? @user.licenses : nil %></li>
+      <li>licenses_in_use: <%= @user ? @user.licenses_in_use : nil %></li>
+    </ul>
+    <h3>Message:</h3>
+    <p><%= @content %></p>
+  </body>
+</html>

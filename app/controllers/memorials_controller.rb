@@ -190,12 +190,19 @@ class MemorialsController < ApplicationController
       end
     else
       @memorial = Memorial.find_by(uuid: params[:id])
-      if @memorial.memory.create({
+      if @memory = @memorial.memory.create({
         user_id: @user[:uuid],
         description: params[:description],
         title: params[:title],
         published: false
       })
+      if @memorial[:public_post]
+        puts "+++++++++++++++++++++"
+        puts "#{ENV['PAGE_URL']}"
+        MemoryMailer.memory_email(User.find_by(uuid: @memorial[:user_id]), @user, @memory, ENV['PAGE_URL']).deliver
+      else
+        MemoryMailer.memory_approval_email(User.find_by(uuid: @memorial[:user_id]), @user, @memory).deliver
+      end
         render json: Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
       else
         render json: @memorial.error, status: :unprocessable_entity

@@ -1,28 +1,31 @@
 class ResponseController < ApplicationController
-  include SendGrid
+
+  before_action :set_user
 
   def support
-    from = Email.new(email: 'memorial@memorial.com')
-    to = Email.new(email: 'mitchjmccutchen+support@gmail.com')
-    subject = '[SUPPORT] ' +  params[:subject]
-    content = Content.new(type: 'text/plain', value: 'email: ' + params[:email] + '   ' + params[:content])
-    mail = Mail.new(from, subject, to, content)
-
-    sg = SendGrid::API.new(api_key: ENV['SENDGRID_KEY'])
-    response = sg.client.mail._('send').post(request_body: mail.to_json)
-    render json: {status: response.status_code, body: response.body, headers: response.headers}
+    if @user.present?
+      ResponseMailer.response_support_email(@user, params[:email], params[:subject], params[:content]).deliver
+    else
+      ResponseMailer.response_support_email(nil, params[:email], params[:subject], params[:content]).deliver
+    end
+    render json: {message: "Email has been sent"}
   end
 
   def bug
-    from = Email.new(email: 'memorial@memorial.com')
-    to = Email.new(email: 'mitchjmccutchen+bug@gmail.com')
-    subject = '[BUG] ' +  params[:subject]
-    content = Content.new(type: 'text/plain', value: 'email: ' + params[:email] + '   ' + params[:content])
-    mail = Mail.new(from, subject, to, content)
+    if @user.present?
+      ResponseMailer.response_bug_email(@user, params[:email], params[:subject], params[:content]).deliver
+    else
+      ResponseMailer.response_bug_email(nil, params[:email], params[:subject], params[:content]).deliver
+    end
+    render json: {message: "Email has been sent"}
+  end
 
-    sg = SendGrid::API.new(api_key: ENV['SENDGRID_KEY'])
-    response = sg.client.mail._('send').post(request_body: mail.to_json)
-    render json: {status: response.status_code, body: response.body, headers: response.headers}
+
+  def set_user
+    if request.headers['Authorization'].present?
+      token = JsonWebToken.verify(request.headers['Authorization'].split(' ').last)
+      @user = User.find_by(auth0_id: token[0]['sub'])
+    end 
   end
 
 end

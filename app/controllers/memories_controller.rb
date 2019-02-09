@@ -20,6 +20,10 @@ class MemoriesController < ApplicationController
     @memory = Memory.new(memory_params)
 
     if @memory.save
+      unless @memory.memorial[:public_post]
+        memorial = @memory.memorial
+        MemoryMailer.memory_email(memorial.user, @user, @memory)
+      end
       render json: @memory, status: :created, location: @memory
     else
       render json: @memory.errors, status: :unprocessable_entity
