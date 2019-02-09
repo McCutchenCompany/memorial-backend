@@ -197,9 +197,7 @@ class MemorialsController < ApplicationController
         published: false
       })
       if @memorial[:public_post]
-        puts "+++++++++++++++++++++"
-        puts "#{ENV['PAGE_URL']}"
-        MemoryMailer.memory_email(User.find_by(uuid: @memorial[:user_id]), @user, @memory, ENV['PAGE_URL']).deliver
+        MemoryMailer.memory_email(User.find_by(uuid: @memorial[:user_id]), @user, @memory).deliver
       else
         MemoryMailer.memory_approval_email(User.find_by(uuid: @memorial[:user_id]), @user, @memory).deliver
       end
