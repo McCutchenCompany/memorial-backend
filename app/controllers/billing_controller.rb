@@ -73,11 +73,9 @@ class BillingController < ApplicationController
       puts params[:percent]
       if (params.has_key?(:percent)) && params[:percent]
         percent = params[:percent].to_d / 100
-        puts percent
-        @discounts = Discount.where(percent: percent, available: true).select("uuid, percent").map{|discount| {percent: discount[:percent] * 100, code: discount[:uuid]}}
-        puts @discounts
+        @discounts = Discount.where(percent: percent, available: true).select("code, percent").map{|discount| {percent: discount[:percent] * 100, code: discount[:code]}}
       else
-        @discounts = Discount.where(available: true).select("uuid, percent").map{|discount| {percent: discount[:percent] * 100, code: discount[:uuid]}}
+        @discounts = Discount.where(available: true).select("code, percent").map{|discount| {percent: discount[:percent] * 100, code: discount[:code]}}
       end
       render json: @discounts
     else
@@ -86,9 +84,9 @@ class BillingController < ApplicationController
   end
 
   def check_discount
-    if @discount = Discount.where(uuid: params[:id], available: true).select("uuid, percent, one_time_use").map{|discount| {percent: discount[:percent] * 100, code: discount[:uuid], one_time_use: discount[:one_time_use]}}[0]
+    if @discount = Discount.where(code: params[:id], available: true).select("code, percent, one_time_use").map{|discount| {percent: discount[:percent] * 100, code: discount[:code], one_time_use: discount[:one_time_use]}}[0]
       render json: @discount
-    elsif @discount = Discount.where(uuid: params[:id], available: false)[0]
+    elsif @discount = Discount.where(code: params[:id], available: false)[0]
       render json: {message: "This code has already been used"}, status: 401
     else
       render json: {message: "This code does not exist"}, status: 404

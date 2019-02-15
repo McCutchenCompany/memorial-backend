@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_03_161708) do
+ActiveRecord::Schema.define(version: 2019_02_15_222713) do
 
   create_table "charges", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "user_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2019_02_03_161708) do
     t.boolean "one_time_use", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
   end
 
   create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
