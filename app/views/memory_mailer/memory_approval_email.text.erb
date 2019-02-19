@@ -1,0 +1,13 @@
+Hi <%= @user.first_name %>
+A new memory has been posted to your memorial and needs your approval.
+
+      <%= @from.first_name %> <%= @from.last_name %> has submitted the following memory:
+
+
+      <%= @memory.description %>
+
+
+Visit https://staging.mymemorial.co/create/<%= @memory.memorial_id %>/memories to approve or deny this memory.
+
+      Tired of getting these emails? You can allow anyone to post their memories without your approval by visiting
+      https://staging.mymemorial.co/create/<%= @memory.memorial_id %>/memories and unchecking the box.

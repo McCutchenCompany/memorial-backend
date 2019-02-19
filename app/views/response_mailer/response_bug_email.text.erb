@@ -1,0 +1,12 @@
+BUG REPORT from <%= @user ? @user.first_name : "Anonymous" %> <%= @user ? @user.last_name : "user" %>
+
+User Info:
+
+  email <%= @user ? @user.email : @email %>
+  auth0_id: <%= @user ? @user.auth0_id : nil %>
+  uuid: <%= @user ? @user.uuid : nil %>
+  licenses: <%= @user ? @user.licenses : nil %>
+  licenses_in_use: <%= @user ? @user.licenses_in_use : nil %>
+
+Message:
+<%= @content %>

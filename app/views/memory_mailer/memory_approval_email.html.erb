@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif" rel="stylesheet">
+    <style>
+      h1, h2, h3, h5 {
+        font-family: 'Noto Serif', serif;
+      }
+
+      h4, h6, p {
+        font-family: 'Noto Sans', sans-serif;
+      }
+      body {
+        background: #DADEE6;
+        position: relative;
+        margin: 0;
+        padding: 0;
+      }
+      a {
+        color: #3A559B;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        background: rgba(255,255,255,0.9);
+        padding: 32px 64px;
+        border-radius: 4px;
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+      }
+      .logo {
+        margin-top: 64px;
+      }
+      svg {
+        display: block;
+        margin: auto;
+      }
+      h1 {
+        text-align: center;
+      }
+      .memory {
+        width: 60%;
+        background: #BECAE8;
+        padding: 16px 32px;
+        border-radius: 4px;
+        margin: auto;
+      }
+      .memory-link {
+        text-decoration: none;
+        color: black;
+      }
+      .footer {
+        width: 100%;
+        height: 300px;
+        background: #0D2059;
+      }
+      .footer p, .footer a {
+        color: white;
+      }
+      .footer p {
+        width: 80%;
+        margin: 36px auto;
+        margin-top: 36px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo">
+      <svg width="55px" height="42px" viewBox="0 0 55 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Desktop-Copy-3" transform="translate(-31.000000, -25.000000)" fill="#000000">
+                  <g id="Logo" transform="translate(31.000000, 25.000000)">
+                      <g id="Group">
+                          <rect id="Rectangle" x="0" y="31" width="11" height="11"></rect>
+                          <polygon id="Path" points="3.61425781 0.3203125 22.6582031 41.8632812 33.0507812 25.1796875 22.6582031 0.3203125"></polygon>
+                          <rect id="Rectangle" x="37" y="0" width="18" height="42"></rect>
+                      </g>
+                  </g>
+              </g>
+          </g>
+      </svg>
+    </div>
+    <h1>Memorial</h1>
+
+    <div class="container">
+      <h2>Hi <%= @user.first_name %></h2>
+      <h3>A new memory has been posted to your memorial for <%= @memory.memorial[:first_name] %> <%= @memory.memorial[:last_name]%> and needs your approval.</h3>
+      <p>
+        <%= @from.first_name %> <%= @from.last_name %> has submitted the following memory:
+      </p>
+      <a class="memory-link" href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">
+      <div class="memory">
+        <h3><%= @memory.title %></h3>
+        <p>
+          <%= @memory.description %>
+        </p>
+      </div>
+      </a>
+      <p>
+        Visit <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a> to approve or deny this memory.
+      </p>
+    </div>
+    <div class="footer">
+      <p>
+        Would you rather not have to approve all of the memories added to this memorial? Vist
+        <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a>  and unchecking the box.
+      </p>
+    </div>
+  </body>
+</html>

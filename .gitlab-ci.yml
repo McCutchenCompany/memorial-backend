@@ -1,0 +1,37 @@
+image: ruby:2.5
+
+services:
+  - docker:dind
+
+before_script:
+  - docker info
+
+deploy_production:
+  stage: deploy
+  environment: production
+  only:
+    - master
+  before_script:
+    - (apt-get update && apt-get install sshpass)
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
+  # #generate ssh key
+    - mkdir -p ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+  script:
+    - /bin/sh .gitlab-deploy-prod.sh
+
+deploy_stage:
+  stage: deploy
+  environment: staging
+  only:
+    - staging
+  before_script:
+    - (apt-get update && apt-get install sshpass)
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
+  # #generate ssh key
+    - mkdir -p ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+  script:
+    - /bin/sh .gitlab-deploy.sh

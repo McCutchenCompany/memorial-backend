@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  memorial_id: MyString
+  user_id: MyString
+  description: MyText
+  published: false
+
+two:
+  memorial_id: MyString
+  user_id: MyString
+  description: MyText
+  published: false
