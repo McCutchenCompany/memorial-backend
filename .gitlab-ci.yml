@@ -19,7 +19,7 @@ deploy_production:
     - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 400 ~/.ssh/id_rsa
   script:
-    - /bin/sh .gitlab-deploy.sh
+    - /bin/sh .gitlab-deploy-prod.sh
 
 deploy_stage:
   stage: deploy
