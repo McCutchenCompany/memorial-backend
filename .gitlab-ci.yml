@@ -20,3 +20,18 @@ deploy_stage:
     - chmod 400 ~/.ssh/id_rsa
   script:
     - /bin/sh .gitlab-deploy.sh
+
+deploy_production:
+  stage: deploy
+  environment: production
+  only:
+    - master
+    before_script:
+    - (apt-get update && apt-get install sshpass)
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y)'
+  # #generate ssh key
+    - mkdir -p ~/.ssh
+    - echo -e "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+  script:
+    - /bin/sh .gitlab-deploy.sh
