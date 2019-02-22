@@ -5,12 +5,20 @@ class BillingController < ApplicationController
 
   def purchase
     initialPrice = 6000
+    price = initialPrice
+    receipt = {}
+    receipt[:price] = initialPrice / 100
+    receipt[:quantity] = params[:quantity]
     if (params.has_key?(:discount)) && params[:discount]
+      @discount = Discount.where(code: params[:discount])
+      receipt[:discount_code] = params[:discount]
+      receipt[:discount_percent] = @discount.pluck(:percent)[0]
+      receipt[:discount_one_time] = @discount.pluck(:one_time_use)[0]
       price = Discount.give_discount(params[:quantity], initialPrice, params[:discount], @user[:uuid]).round
     elsif params[:quantity] > 1
       price = price + ((params[:quantity] - 1) * initialPrice)
     end
-
+    receipt[:total] = (price / 100)
     if price / 100 != params[:price]
       render json: {error: "The expected price did not match the calculated price"}, status: 500
     else
@@ -34,8 +42,10 @@ class BillingController < ApplicationController
       if stripeCharge || price == 0
         if stripeCharge
           @charge = @user.charge.new({charge: stripeCharge[:amount]})
+          PaymentReceiptMailer.payment_receipt(@user, receipt).deliver    
         else
           @charge = @user.charge.new({charge: 0})
+          PaymentReceiptMailer.payment_receipt(@user, receipt).deliver      
         end
         @charge.save
         new_licenses = @user[:licenses] + params[:quantity];

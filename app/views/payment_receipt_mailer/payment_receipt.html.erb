@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif" rel="stylesheet">
+    <style>
+      body {
+        background-color: #F2F3F5;
+      }
+      h1, h2, h3, h5, th {
+        font-family: 'Noto Serif', serif;
+      }
+
+      h4, h6, p {
+        font-family: 'Noto Sans', sans-serif;
+      }
+      .container {
+        width: 600px;
+        margin: auto;
+        background-color: #ffffff;
+      }
+      .content, .details, .footer {
+        background-color: #BECAE8;
+        width: 600px;
+        margin: auto;
+      }
+      .details {
+        width: 470px;
+      }
+      .footer {
+        background-color: #0D2059;
+      }
+      img {
+        display: block;
+        margin: auto;
+      }
+      h1, .quantity {
+        text-align: center;
+      }
+      .bottom-padding, .header-top {
+        height: 64px;
+      }
+      .footer-top {
+        height: 16px;
+      }
+      .footer-bottom {
+        height: 150px;
+      }
+      .margin {
+        width: 32px;
+      }
+      .product {
+        text-align: left;
+      }
+      .price-col {
+        text-align: right;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      .bottom-border {
+        border-bottom: 1px solid black;
+      }
+      .padded {
+        padding: 16px 0;
+      }
+      .padded-top {
+        padding: 16px 0 0;
+      }
+      .padded-left {
+        padding-left: 32px;
+      }
+      .footer a {
+        color: #ffffff;
+        font-size: 10px;
+      }
+      .copyright p {
+        text-align: right;
+        font-size: 10px;
+        color: #ffffff;
+      }
+      .profile {
+        color: #3A559B;
+      }
+      @media only screen and (max-width: 400px) {
+        .container {
+        width: 100%;
+        }
+        .content, .details, .footer {
+          width: 100%;
+        }
+        .details {
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table class="container">
+      <tr class="header-top"></tr>
+      <tr class="header">
+        <td class="margin"></td>
+        <td>
+          <img src="https://s3.amazonaws.com/memorial-staging-imgs/Memorial+Logo.png">
+          <h1>Memorial</h1>
+        </td>
+        <td class="margin"></td>
+      </tr>
+      <tr>
+        <td class="margin"></td>
+        <td>
+          <h2 class="padded-left">Thank you</h2>
+          <p class="padded-left">We have received your payment.</p>
+          <p class="padded-left"><%= @payment[:quantity] > 1 ? "Your Memorials are" : "Your Memorial is" %> now available to be created/edited</p>
+          <p class="padded-left">You can view, edit, and publish all of your memorials on your <a class="profile" href="mymemorial.co/profile">profile page</a>.</p>
+        </td>
+        <td class="margin"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <table class="content">
+          <tr>
+            <td class="margin"></td>
+            <td>
+              <h2>Order details</h2>
+              <p>Order date: <%= Date.today.to_formatted_s(:long) %></p>
+            </td>
+            <td class="margin"></td>
+          </tr>
+          <tr>
+            <td class="margin"></td>
+            <td>
+              <table class="details">
+                <tr class="bottom-border">
+                  <th class="product padded">PRODUCT</th>
+                  <th class="quantity padded">QUANTITY</th>
+                  <th class="price-col padded">PRICE</th>
+                </tr>
+                <tr class="bottom-border">
+                  <td class="product padded">Memorial</td>
+                  <td class="quantity padded">x <%= @payment[:quantity] %></td>
+                  <td class="price-col padded">$<%= @payment[:quantity] * @payment[:price] %>.00</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td colspan="2" class="price-col padded-top">Subtotal: $<%= @payment[:quantity] * @payment[:price] %>.00</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td colspan="2" class="price-col">Discount: 
+                    <% if @payment[:discount_code] %>
+                      <% if @payment[:discount_one_time] == true %>
+                        - $<%= @payment[:discount_percent].to_f * @payment[:price] %>0
+                      <% else %>
+                        - $<%= (@payment[:price] * @payment[:quantity]) * @payment[:discount_percent].to_f %>0
+                      <% end %>
+                    <% else %>
+                      $0.00
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td colspan="2" class="price-col">Total payment: $<%= @payment[:total] %>.00</td>
+                </tr>
+                <tr class="bottom-padding"></tr>
+              </table>
+            </td>
+            <td class="margin"></td>
+          </td>
+        </table>
+      </td>
+      <table class="footer">
+        <tr class="footer-top"></tr>
+        <tr>
+          <td class="margin"></td>
+          <td>
+            <p><a href="https://mymemorial.co">MyMemorial.co</a></p>
+          </td>
+          <td class="copyright">
+            <p>&copy; 2019 Mitch McCutchen LLC</p>
+          </td>
+          <td class="margin"></td>
+        </tr>
+        <tr class="footer-bottom">
+      </table>
+    </table>
+  </body>
+</html>
