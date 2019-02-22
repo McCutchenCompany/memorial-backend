@@ -1,0 +1,26 @@
+Memorial
+
+Thank you
+We have received your payment.
+<%= @payment[:quantity] > 1 ? "Your Memorials are" : "Your Memorial is" %> now available to be created/edited
+You can view, edit, and publish all of your memorials on your profile page at https://mymemorial.co/profile
+        
+Order details
+Order date: <%= Date.today.to_formatted_s(:long) %>
+            
+  PRODUCT     QUANTITY      PRICE
+  Memorial    x <%= @payment[:quantity] %>      $<%= (@payment[:quantity] * @payment[:price]) / 100 %>.00
+
+                            Subtotal: $<%= (@payment[:quantity] * @payment[:price]) / 100 %>.00
+                            Discount: <% if @payment[:discount_code] %>
+                                      <% if @payment[:discount_one_time] == true %>
+                                        - $<%= (@payment[:discount_percent].to_f * @payment[:price]) / 100 %>0
+                                      <% else %>
+                                        - $<%= ((@payment[:price] * @payment[:quantity]) * @payment[:discount_percent].to_f) / 100 %>0
+                                      <% end %>
+                                    <% else %>
+                                      $0.00
+                                    <% end %>
+                            Total payment: $<%= @payment[:total] %>.00
+https://mymemorial.co
+Copyright 2019 Mitch McCutchen LLC
