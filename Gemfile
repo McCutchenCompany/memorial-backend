@@ -23,6 +23,8 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 gem 'sendgrid-ruby'
 
+gem 'mini_magick'
+
 # https://github.com/zipmark/rspec_api_documentation
 gem 'rspec_api_documentation'
 
