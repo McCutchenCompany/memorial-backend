@@ -129,6 +129,11 @@ class MemorialsController < ApplicationController
       
       obj = s3.bucket(ENV['S3_BUCKET']).object(name)
 
+      image = convert_img(params[:file].tempfile.path)
+      File.open(params[:file].tempfile.path, "wb") do |file| 
+        file.write image
+      end
+
       # Upload the file
       obj.upload_file(params[:file].tempfile, acl: 'public-read')
 
@@ -221,6 +226,17 @@ class MemorialsController < ApplicationController
 
     def set_user
       @user = User.find_by(auth0_id: auth_token[0]['sub'])
+    end
+
+    def convert_img(file)
+      content = MiniMagick::Tool::Convert.new do |convert|
+        convert << file
+        convert.auto_orient
+        convert.strip
+        convert.resize("1180x665")
+        convert.stdout
+      end
+      return content
     end
 
     # Only allow a trusted parameter "white list" through.
