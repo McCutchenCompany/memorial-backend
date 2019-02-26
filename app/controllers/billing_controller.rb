@@ -19,7 +19,8 @@ class BillingController < ApplicationController
       price = price + ((params[:quantity] - 1) * initialPrice)
     end
     receipt[:total] = (price / 100)
-    if price / 100 != params[:price]
+
+    if price / 100 != params[:price].to_i
       render json: {error: "The expected price did not match the calculated price"}, status: 500
     else
       unless price == 0
