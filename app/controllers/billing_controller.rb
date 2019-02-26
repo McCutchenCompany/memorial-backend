@@ -32,7 +32,7 @@ class BillingController < ApplicationController
           stripeCharge = Stripe::Charge.create({
             amount: price,
             currency: 'usd',
-            description: 'Test charge',
+            description: "Memorial Purchase x#{params[:quantity]}",
             source: token
           });
         rescue Stripe::CardError => e
