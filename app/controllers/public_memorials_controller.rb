@@ -21,7 +21,9 @@ class PublicMemorialsController < ApplicationController
         end
       end
       if @memorial[:published] || @memorial[:user_id] == @user[:uuid]
-        Memorial.add_view(@memorial)
+        unless @memorial[:uuid] == "020cac1f-f335-4c0d-831f-7567b9076b61"
+          Memorial.add_view(@memorial)
+        end
         @location = @memorial.location
         @timeline = @memorial.timeline.where.not(date: nil).sort_by &:date
         @response = {
