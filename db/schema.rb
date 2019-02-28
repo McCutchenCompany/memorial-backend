@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_15_222713) do
+ActiveRecord::Schema.define(version: 2019_02_28_223559) do
 
   create_table "charges", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "user_id"
@@ -67,6 +67,18 @@ ActiveRecord::Schema.define(version: 2019_02_15_222713) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "denied", default: false
+  end
+
+  create_table "photos", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "memorial_id"
+    t.string "user_id"
+    t.string "asset_link"
+    t.string "title"
+    t.text "description"
+    t.boolean "published"
+    t.boolean "denied"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "timelines", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

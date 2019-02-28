@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :photos
   resources :memories
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
