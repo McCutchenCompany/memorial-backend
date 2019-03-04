@@ -245,7 +245,12 @@ class MemorialsController < ApplicationController
 
       #Create an object for the upload
       if obj.public_url
-        @photo = @memorial.photos.new({asset_link: name, user_id: @user[:uuid], published: false, denied: false})
+        if @user[:uuid] == @memorial[:user_id]
+          published = true;
+        else
+          published = false
+        end
+        @photo = @memorial.photos.new({asset_link: name, user_id: @user[:uuid], published: published, denied: false})
         if @photo.save
           render json: @photo
         else
