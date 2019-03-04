@@ -1,5 +1,8 @@
 class PhotosController < ApplicationController
+  require 'uri'
   before_action :set_photo, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user_present, only: [:next_index]
 
   # GET /photos
   def index
@@ -13,29 +16,50 @@ class PhotosController < ApplicationController
     render json: @photo
   end
 
-  # POST /photos
-  def create
-    @photo = Photo.new(photo_params)
-
-    if @photo.save
-      render json: @photo, status: :created, location: @photo
-    else
-      render json: @photo.errors, status: :unprocessable_entity
-    end
-  end
-
   # PATCH/PUT /photos/1
   def update
-    if @photo.update(photo_params)
-      render json: @photo
+    @memorial = @photo.memorial
+    if @user[:uuid] != @photo[:user_id] && @user[:uuid] != @memorial[:user_id]
+      render json: {message: 'This photo does not belong to you'}, status: 422
     else
-      render json: @photo.errors, status: :unprocessable_entity
+      if @photo.update(photo_params)
+        render json: @photo
+      else
+        render json: @photo.errors, status: :unprocessable_entity
+      end
     end
   end
 
   # DELETE /photos/1
   def destroy
-    @photo.destroy
+    if @photo
+      if @user[:uuid] != @photo[:user_id] && @user[:uuid] != @memorial[:user_id]
+        render json: {error: 'You do not have access to this photo'}, status: 422
+      else
+        s3 = Aws::S3::Resource.new(region: 'us-east-1')
+        s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
+        photo_id = @photo[:uuid]
+        @photo.destroy
+        render json: {message: 'Photo removed', id: photo_id}
+      end
+    else 
+      render json: {error: 'The photo does not exist'}, status: :unprocessable_entity
+    end
+  end
+
+  # GET /photos/:memorial_id?index=:index
+  def next_index
+    @memorial = Memorial.find(params[:memorial_id])
+    if @memorial
+      if @memorial[:public_photo]
+        @photos = Photo.map_users(@memorial.photos)
+      else
+        @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]))
+      end
+      render json: @photos[params[:index].to_i..20]
+    else
+      render json: {error: 'This memorial does not exist'}, status: :unprocessable_entity
+    end
   end
 
   private
@@ -44,8 +68,22 @@ class PhotosController < ApplicationController
       @photo = Photo.find(params[:id])
     end
 
+    def set_user
+      @user = User.find_by(auth0_id: auth_token[0]['sub'])
+    end
+
+    def set_user_present
+      if request.headers['Authorization'].present?
+        if authenticate_request!
+          @user = User.find_by(auth0_id: auth_token[0]['sub'])
+        end
+      else
+        @user = {uuid: nil}
+      end
+    end
+
     # Only allow a trusted parameter "white list" through.
     def photo_params
-      params.require(:photo).permit(:memorial_id, :user_id, :asset_link, :title, :description, :published, :denied)
+      params.require(:photo).permit(:title, :description)
     end
 end

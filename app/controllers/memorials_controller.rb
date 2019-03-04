@@ -12,7 +12,11 @@ class MemorialsController < ApplicationController
     :remove_image,
     :replace_image,
     :update_timeline,
-    :memories
+    :memories,
+    :approve_photo
+  ]
+  before_action :set_public_memorial, only: [
+    :photo
   ]
 
   # GET /memorials
@@ -27,14 +31,23 @@ class MemorialsController < ApplicationController
     if @memorial.nil?
       render json: {error: 'This memorial does not belong to you'}, status: 401
     else
+      @all_photos = @memorial.photos
       @location = @memorial.location
       @timeline = @memorial.timeline.reverse
       @memories = Memory.map_names(@memorial.memory)
+      if @memorial[:public_photo]
+        @photos = Photo.map_users(@all_photos).take(20)
+        @photos_count = @all_photos.count
+      else
+        @photos = {approved: Photo.map_users(@all_photos.select {|p| p[:published] == true}.take(20)), denied: Photo.map_users(@all_photos.select {|p| p[:denied] == true }.take(20)), need_approval: Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }.take(20))}
+        @photos_count = {approved: @all_photos.select {|p| p[:published] == true}.count, denied: @all_photos.select {|p| p[:denied] == true }.count, need_approval: @all_photos.select {|p| p[:published] == false && p[:denied] == false }.count}
+      end
       @response = {
         memorial: @memorial,
         location: @location,
         timeline: @timeline,
-        memories: @memories
+        memories: @memories,
+        album: {count: @photos_count, photos: @photos}
       }
       render json: @response
     end
@@ -213,6 +226,58 @@ class MemorialsController < ApplicationController
     end
   end
 
+  # POST /memorial/:id/photo
+  def photo
+    if @memorial
+      filename = URI.encode(params[:file].original_filename).gsub('%', '');
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      name = params[:id] + '/album/' + filename
+      
+      obj = s3.bucket(ENV['S3_BUCKET']).object(name)
+
+      image = convert_photo(params[:file].tempfile.path)
+      File.open(params[:file].tempfile.path, "wb") do |file| 
+        file.write image
+      end
+
+      # Upload the file
+      obj.upload_file(params[:file].tempfile, acl: 'public-read')
+
+      #Create an object for the upload
+      if obj.public_url
+        @photo = @memorial.photos.new({asset_link: name, user_id: @user[:uuid], published: false, denied: false})
+        if @photo.save
+          render json: @photo
+        else
+          render json: @photo.errors, status: :unprocessable_entity
+        end
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'The memorial does not exist'}, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH /memorials/:id/approve_photo/:photo_id
+  # params: photo_id, denied, published, title, description
+  def approve_photo
+    if @memorial
+      @photo = Photo.find(params[:photo_id])
+      if @photo[:memorial_id] == @memorial[:uuid]
+        if @photo.update(photo_params)
+          render json: @photo
+        else
+          render json: @photo.error, status: :unprocessable_entity
+        end
+      else
+        render json: {error: 'This photo does not belong with the memorial'}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'This memorial does not belong to you'}, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /memorials/1
   def destroy
     @memorial.destroy
@@ -222,6 +287,10 @@ class MemorialsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
       @memorial = Memorial.where(uuid: params[:id], user_id: @user[:uuid])[0]
+    end
+
+    def set_public_memorial
+      @memorial = Memorial.find(params[:id])
     end
 
     def set_user
@@ -237,6 +306,26 @@ class MemorialsController < ApplicationController
         convert.stdout
       end
       return content
+    end
+
+    def convert_photo(file)
+      content = MiniMagick::Tool::Convert.new do |convert|
+        convert << file
+        convert.auto_orient
+        convert.strip
+        convert.resize("1180x665")
+        convert.stdout
+      end
+      return content
+    end
+
+    def photo_params
+      params.permit(
+        :denied,
+        :published,
+        :title,
+        :description
+      )
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -261,6 +350,7 @@ class MemorialsController < ApplicationController
         :title,
         :published,
         :public_post,
+        :public_photo,
         :posX,
         :posY,
         :scale,

@@ -16,10 +16,13 @@ class Memory < ApplicationRecord
 
   def self.map_names(memories)
     @memories = []
+    @users = User.where(uuid: memories.map{|m| m.user_id})
     memories.each { |memory,index|
       entry = memory.as_json
-      entry[:first_name] = memory.user[:first_name]
-      entry[:last_name] = memory.user[:last_name]
+      user = @users.select {|u| u.uuid == memory.user_id}
+      user = user[0]
+      entry[:first_name] = user[:first_name]
+      entry[:last_name] = user[:last_name]
       @memories.push(entry)
     }
     @memories
