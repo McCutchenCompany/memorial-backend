@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       post 'timeline'
       post 'memories'
       post 'photo'
+      get 'photos'
       patch 'approve_photo/:photo_id', to: 'memorials#approve_photo'
       patch 'update_timeline'
       post 'image'
