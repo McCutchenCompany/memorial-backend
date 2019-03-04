@@ -6,6 +6,7 @@ class Memorial < ApplicationRecord
 
   has_many :timeline
   has_many :memory
+  has_many :photos
 
   def self.search(params)
     records = all
