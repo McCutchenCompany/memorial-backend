@@ -82,6 +82,22 @@ class PhotosController < ApplicationController
       end
     end
 
+    def authenticate_request!
+      auth_token
+    rescue JWT::VerificationError, JWT::DecodeError
+      render json: { errors: ['Not Authenticated'] }, status: :unauthorized
+    end
+  
+    def http_token
+      if request.headers['Authorization'].present?
+        request.headers['Authorization'].split(' ').last
+      end
+    end
+  
+    def auth_token
+      JsonWebToken.verify(http_token)
+    end
+
     # Only allow a trusted parameter "white list" through.
     def photo_params
       params.require(:photo).permit(:title, :description)

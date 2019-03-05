@@ -256,7 +256,7 @@ class MemorialsController < ApplicationController
     end
   end
 
-  # POST /memorial/:id/photo
+  # POST /memorials/:id/photo
   def photo
     if @memorial
       filename = URI.encode(params[:file].original_filename).gsub('%', '');
