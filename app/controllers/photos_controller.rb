@@ -56,7 +56,7 @@ class PhotosController < ApplicationController
       else
         @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]))
       end
-      render json: @photos[params[:index].to_i..params[:index] + 19]
+      render json: @photos[params[:index].to_i..params[:index].to_i + 19]
     else
       render json: {error: 'This memorial does not exist'}, status: :unprocessable_entity
     end
