@@ -71,7 +71,7 @@ class MemorialsController < ApplicationController
             @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..params[:denied].to_i + 19])
           end
           if params[:waiting].present?
-            @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0.. params[:waiting].to_i + 19])
+            @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0..params[:waiting].to_i + 19])
           end
         else
           @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..params[:approved].to_i + 19])
