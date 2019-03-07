@@ -61,22 +61,22 @@ class MemorialsController < ApplicationController
       @response = {}
       @response[:count] = {approved: @all_photos.select {|p| p[:published] == true}.count, denied: @all_photos.select {|p| p[:denied] == true }.count, need_approval: @all_photos.select {|p| p[:published] == false && p[:denied] == false }.count}
       if @memorial[:public_photo]
-        @response[:photos] = @photos = Photo.map_users(@all_photos)[params[:index].to_i || 0..20]
+        @response[:photos] = @photos = Photo.map_users(@all_photos)[params[:index].to_i || 0..params[:index].to_i + 19]
       else
         if params[:approved].present? || params[:denied].present? || params[:waiting].present?
           if params[:approved].present?
-            @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..20])
+            @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..params[:approved].to_i + 19])
           end
           if params[:denied].present?
-            @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..20])
+            @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..params[:denied].to_i + 19])
           end
           if params[:waiting].present?
-            @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0..20])
+            @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0.. params[:waiting].to_i + 19])
           end
         else
-          @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..20])
-          @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..20])
-          @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0..20])
+          @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..params[:approved].to_i + 19])
+          @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..params[:denied].to_i + 19])
+          @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0..params[:waiting].to_i || 0 + 19])
         end
       end
       render json: @response
