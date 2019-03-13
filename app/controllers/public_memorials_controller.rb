@@ -13,21 +13,19 @@ class PublicMemorialsController < ApplicationController
     def show
       if @memorial[:user_id] == @user[:uuid]
         @memories = Memory.map_names(@memorial.memory)
-        @photos = Photo.map_users(@memorial.photos.take(5))
-        @photo_count = @memorial.photos.count
       else
         if @memorial[:public_post]
           @memories = Memory.map_names(@memorial.memory);
         else
           @memories = Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
         end
-        if @memorial[:public_photo]
-          @photos = Photo.map_users(@memorial.photos.take(20))
-          @photo_count = @memorial.photos.count
-        else
-          @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).take(20))
-          @photo_count = @memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).count
-        end
+      end
+      if @memorial[:public_photo]
+        @photos = Photo.map_users(@memorial.photos.take(20))
+        @photo_count = @memorial.photos.count
+      else
+        @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).take(20))
+        @photo_count = @memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).count
       end
       if @memorial[:published] || @memorial[:user_id] == @user[:uuid]
         unless @memorial[:uuid] == "020cac1f-f335-4c0d-831f-7567b9076b61"
