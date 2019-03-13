@@ -17,4 +17,12 @@ class Photo < ApplicationRecord
     }
     @photos
   end
+
+  def self.map_single_user(photo)
+    user = photo.user
+    entry = photo.as_json
+    entry[:first_name] = user[:first_name]
+    entry[:last_name] = user[:last_name]
+    return entry
+  end
 end

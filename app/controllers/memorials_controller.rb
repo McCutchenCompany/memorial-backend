@@ -282,7 +282,7 @@ class MemorialsController < ApplicationController
         end
         @photo = @memorial.photos.new({asset_link: name, user_id: @user[:uuid], published: published, denied: false})
         if @photo.save
-          render json: @photo
+          render json: Photo.map_single_user(@photo)
         else
           render json: @photo.errors, status: :unprocessable_entity
         end
