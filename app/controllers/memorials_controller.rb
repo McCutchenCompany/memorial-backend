@@ -261,7 +261,7 @@ class MemorialsController < ApplicationController
     if @memorial
       filename = URI.encode(params[:file].original_filename).gsub('%', '');
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
-      name = params[:id] + '/album/' + filename
+      name = params[:id] + '/album/' + SecureRandom.hex(4) + '-' + filename
       
       obj = s3.bucket(ENV['S3_BUCKET']).object(name)
 
