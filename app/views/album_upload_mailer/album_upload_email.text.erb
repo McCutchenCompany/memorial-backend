@@ -1,0 +1,21 @@
+Memorial
+
+Hi <%= @user.first_name %>
+<%= @from.first_name %> <%= @from.last_name %> has uploaded new photos to the shared album on the memorial for <%= @memorial[:first_name] %> <%= @memorial[:last_name]%><% if @memorial[:public_photo] %>.<% else %> and needs your approval.<% end %>
+          
+  <% if @memorial[:public_photo] %>
+    Visit <%= ENV['PAGE_URL'] %>/memorial/<%= @memorial[:uuid] %> to see the uploaded photos.
+  <% else %>
+    Visit <%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/photos to approve or deny uploaded photos.
+  <% end %>
+
+  <% if @memorial[:public_photo] %>
+    Would you rather decide what photos are added to the album for this memorial? Visit
+<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/memories and check the box.
+  <% else %>
+    Would you rather not have to approve all of the memories added to this memorial? Visit
+<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/memories and unchecking the box.
+  <% end %>
+              
+https://mymemorial.co
+2019 Mitch McCutchen LLC

@@ -3,9 +3,11 @@ class Memorial < ApplicationRecord
 
   has_one :location
   has_one :user
+  has_one :album_email
 
   has_many :timeline
   has_many :memory
+  has_many :photos
 
   def self.search(params)
     records = all

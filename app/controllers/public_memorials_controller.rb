@@ -20,6 +20,13 @@ class PublicMemorialsController < ApplicationController
           @memories = Memory.map_names(@memorial.memory.where("published = true OR user_id = ?", @user[:uuid]))
         end
       end
+      if @memorial[:public_photo]
+        @photos = Photo.map_users(@memorial.photos.take(20))
+        @photo_count = @memorial.photos.count
+      else
+        @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).take(20))
+        @photo_count = @memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).count
+      end
       if @memorial[:published] || @memorial[:user_id] == @user[:uuid]
         unless @memorial[:uuid] == "020cac1f-f335-4c0d-831f-7567b9076b61"
           Memorial.add_view(@memorial)
@@ -30,7 +37,8 @@ class PublicMemorialsController < ApplicationController
           memorial: @memorial,
           location: @location,
           timeline: @timeline,
-          memories: @memories
+          memories: @memories,
+          album: {count: @photo_count, photos: @photos}
         }
         render json: @response
       else

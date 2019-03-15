@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
 
-  resources :memories
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
   get 'find_places', to: 'application#find_places'
+  get 'photos/:memorial_id', to: 'photos#next_index'
+  resources :memories
 
+  resources :photos
+  
   resources :response do
     collection do
       post 'support'
@@ -45,6 +48,9 @@ Rails.application.routes.draw do
       post 'location'
       post 'timeline'
       post 'memories'
+      post 'photo'
+      get 'photos'
+      patch 'approve_photo/:photo_id', to: 'memorials#approve_photo'
       patch 'update_timeline'
       post 'image'
       delete 'remove_image'

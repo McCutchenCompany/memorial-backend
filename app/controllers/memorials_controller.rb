@@ -12,7 +12,12 @@ class MemorialsController < ApplicationController
     :remove_image,
     :replace_image,
     :update_timeline,
-    :memories
+    :memories,
+    :approve_photo,
+    :photos
+  ]
+  before_action :set_public_memorial, only: [
+    :photo
   ]
 
   # GET /memorials
@@ -27,15 +32,53 @@ class MemorialsController < ApplicationController
     if @memorial.nil?
       render json: {error: 'This memorial does not belong to you'}, status: 401
     else
+      @all_photos = @memorial.photos
       @location = @memorial.location
       @timeline = @memorial.timeline.reverse
       @memories = Memory.map_names(@memorial.memory)
+      if @memorial[:public_photo]
+        @photos = Photo.map_users(@all_photos).take(20)
+      else
+        @photos = {approved: Photo.map_users(@all_photos.select {|p| p[:published] == true}.take(20)), denied: Photo.map_users(@all_photos.select {|p| p[:denied] == true }.take(20)), need_approval: Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }.take(20))}
+      end
+      @photos_count = {approved: @all_photos.select {|p| p[:published] == true}.count, denied: @all_photos.select {|p| p[:denied] == true }.count, need_approval: @all_photos.select {|p| p[:published] == false && p[:denied] == false }.count}
       @response = {
         memorial: @memorial,
         location: @location,
         timeline: @timeline,
-        memories: @memories
+        memories: @memories,
       }
+      render json: @response
+    end
+  end
+
+  # GET /memorials/:id/photos?approved=:approved&denied=:denied&waiting=:waiting&index=:index
+  def photos
+    if @memorial.nil?
+      render json: {error: 'This memorial does not belong to you'}, status: 401
+    else
+      @all_photos = @memorial.photos
+      @response = {}
+      @response[:count] = {approved: @all_photos.select {|p| p[:published] == true}.count, denied: @all_photos.select {|p| p[:denied] == true }.count, need_approval: @all_photos.select {|p| p[:published] == false && p[:denied] == false }.count}
+      if @memorial[:public_photo]
+        @response[:photos] = @photos = Photo.map_users(@all_photos)[params[:index].to_i || 0..params[:index].to_i + 19]
+      else
+        if params[:approved].present? || params[:denied].present? || params[:waiting].present?
+          if params[:approved].present?
+            @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..params[:approved].to_i + 19])
+          end
+          if params[:denied].present?
+            @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..params[:denied].to_i + 19])
+          end
+          if params[:waiting].present?
+            @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0..params[:waiting].to_i + 19])
+          end
+        else
+          @response[:approved] = Photo.map_users(@all_photos.select {|p| p[:published] == true}[params[:approved].to_i || 0..params[:approved].to_i + 19])
+          @response[:denied] = Photo.map_users(@all_photos.select {|p| p[:denied] == true }[params[:denied].to_i || 0..params[:denied].to_i + 19])
+          @response[:need_approval] = Photo.map_users(@all_photos.select {|p| p[:published] == false && p[:denied] == false }[params[:waiting].to_i || 0..params[:waiting].to_i + 19])
+        end
+      end
       render json: @response
     end
   end
@@ -213,6 +256,67 @@ class MemorialsController < ApplicationController
     end
   end
 
+  # POST /memorials/:id/photo
+  def photo
+    if @memorial
+      filename = URI.encode(params[:file].original_filename).gsub('%', '');
+      s3 = Aws::S3::Resource.new(region: 'us-east-1')
+      name = params[:id] + '/album/' + SecureRandom.hex(4) + '-' + filename
+      
+      obj = s3.bucket(ENV['S3_BUCKET']).object(name)
+
+      image = convert_photo(params[:file].tempfile.path)
+      File.open(params[:file].tempfile.path, "wb") do |file| 
+        file.write image
+      end
+
+      # Upload the file
+      obj.upload_file(params[:file].tempfile, acl: 'public-read')
+
+      #Create an object for the upload
+      if obj.public_url
+        if @user[:uuid] == @memorial[:user_id]
+          published = true;
+        else
+          published = false
+        end
+        @photo = @memorial.photos.new({asset_link: name, user_id: @user[:uuid], published: published, denied: false})
+        if @photo.save
+          if @memorial[:user_id] != @user[:uuid] && Photo.should_send_email(@photo, @user)
+            memorial_user = User.find(@memorial[:user_id])
+            AlbumUploadMailer.album_upload_email(memorial_user, @user, @photo).deliver
+          end
+          render json: Photo.map_single_user(@photo)
+        else
+          render json: @photo.errors, status: :unprocessable_entity
+        end
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'The memorial does not exist'}, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH /memorials/:id/approve_photo/:photo_id
+  # params: photo_id, denied, published, title, description
+  def approve_photo
+    if @memorial
+      @photo = Photo.find(params[:photo_id])
+      if @photo[:memorial_id] == @memorial[:uuid]
+        if @photo.update(photo_params)
+          render json: @photo
+        else
+          render json: @photo.error, status: :unprocessable_entity
+        end
+      else
+        render json: {error: 'This photo does not belong with the memorial'}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'This memorial does not belong to you'}, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /memorials/1
   def destroy
     @memorial.destroy
@@ -222,6 +326,10 @@ class MemorialsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
       @memorial = Memorial.where(uuid: params[:id], user_id: @user[:uuid])[0]
+    end
+
+    def set_public_memorial
+      @memorial = Memorial.find(params[:id])
     end
 
     def set_user
@@ -237,6 +345,26 @@ class MemorialsController < ApplicationController
         convert.stdout
       end
       return content
+    end
+
+    def convert_photo(file)
+      content = MiniMagick::Tool::Convert.new do |convert|
+        convert << file
+        convert.auto_orient
+        convert.strip
+        convert.resize("1180x665")
+        convert.stdout
+      end
+      return content
+    end
+
+    def photo_params
+      params.permit(
+        :denied,
+        :published,
+        :title,
+        :description
+      )
     end
 
     # Only allow a trusted parameter "white list" through.
@@ -261,6 +389,7 @@ class MemorialsController < ApplicationController
         :title,
         :published,
         :public_post,
+        :public_photo,
         :posX,
         :posY,
         :scale,
