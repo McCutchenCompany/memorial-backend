@@ -97,31 +97,7 @@
         <td class="margin"></td>
         <td>
           <h2 class="padding-left">Hi <%= @user.first_name %></h2>
-          <h3 class="padding-left">A new memory has been posted to your memorial for <%= @memory.memorial[:first_name] %> <%= @memory.memorial[:last_name]%> and needs your approval.</h3>
-          <p class="padding-left">
-            <%= @from.first_name %> <%= @from.last_name %> has submitted the following memory:
-          </p>
-        </td>
-        <td class="margin"></td>
-      </tr>
-      <tr>
-        <td class="margin"></td>
-        <td>
-          <table class="memory">
-          <tr>
-            <td class="margin"></td>
-            <td>
-              <a class="memory-link" href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">
-                <div class="memory">
-                  <h3><%= @memory.title %></h3>
-                  <p>
-                    <%= @memory.description %>
-                  </p>
-                </div>
-              </a>
-            </td>
-          </tr>
-          </table>
+          <h3 class="padding-left"><%= @from.first_name %> <%= @from.last_name %> has uploaded new photos to the shared album on the memorial for <%= @memorial[:first_name] %> <%= @memorial[:last_name]%><% if @memorial[:public_photo] %>.<% else %> and needs your approval.<% end %></h3>
         </td>
         <td class="margin"></td>
       </tr>
@@ -129,7 +105,11 @@
         <td class="margin"></td>
         <td>
           <p class="padding-left">
-            Visit <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a> to approve or deny this memory.
+            <% if @memorial[:public_photo] %>
+              Visit <a href="<%= ENV['PAGE_URL'] %>/memorial/<%= @memorial[:uuid] %>"><%= @memorial[:first_name] %> <%= @memorial[:last_name]%>'s Memorial</a> to see the uploaded photos.
+            <% else %>
+              Visit <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/photos">Approve Photos</a> to approve or deny uploaded photos.
+            <% end %>
           </p>
         </td>
         <td class="margin"></td>
@@ -142,8 +122,13 @@
             <td class="margin"></td>      
             <td colspan="2">
               <p>
-                Would you rather not have to approve all of the memories added to this memorial? Visit
-                <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memory.memorial_id %>/memories">Approve Memories</a>  and unchecking the box.
+                <% if @memorial[:public_photo] %>
+                  Would you rather decide what photos are added to the album for this memorial? Visit
+                  <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/memories">Approve Photos</a>  and check the box.
+                <% else %>
+                  Would you rather not have to approve all of the memories added to this memorial? Visit
+                  <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/memories">Approve Photos</a>  and unchecking the box.
+                <% end %>
               </p>
             </td>
             <td class="margin"></td>

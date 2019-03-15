@@ -25,4 +25,27 @@ class Photo < ApplicationRecord
     entry[:last_name] = user[:last_name]
     return entry
   end
+
+  def self.should_send_email(photo, user)
+    @memorial = photo.memorial
+    @album_email = AlbumEmail.find_by(memorial_id: @memorial[:uuid])
+    if @album_email
+      if @album_email[:user_id] == user[:uuid]
+        if (Time.now.to_i - @album_email.updated_at.to_i) > 1000
+          @album_email.update({user_id: user[:uuid], updated_at: Time.now})
+          return true
+        else
+          return false
+        end
+      else
+        @album_email.update({user_id: user[:uuid]})
+        return true
+      end
+    else
+      @album_email = AlbumEmail.new({memorial_id: @memorial[:uuid], user_id: user[:uuid]})
+      if @album_email.save
+        return true
+      end
+    end
+  end
 end

@@ -282,6 +282,10 @@ class MemorialsController < ApplicationController
         end
         @photo = @memorial.photos.new({asset_link: name, user_id: @user[:uuid], published: published, denied: false})
         if @photo.save
+          if @memorial[:user_id] != @user[:uuid] && Photo.should_send_email(@photo, @user)
+            memorial_user = User.find(@memorial[:user_id])
+            AlbumUploadMailer.album_upload_email(memorial_user, @user, @photo).deliver
+          end
           render json: Photo.map_single_user(@photo)
         else
           render json: @photo.errors, status: :unprocessable_entity
