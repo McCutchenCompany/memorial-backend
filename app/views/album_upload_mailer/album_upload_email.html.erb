@@ -124,10 +124,10 @@
               <p>
                 <% if @memorial[:public_photo] %>
                   Would you rather decide what photos are added to the album for this memorial? Visit
-                  <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/memories">Approve Photos</a>  and check the box.
+                  <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/photos">Approve Photos</a>  and check the box.
                 <% else %>
                   Would you rather not have to approve all of the memories added to this memorial? Visit
-                  <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/memories">Approve Photos</a>  and unchecking the box.
+                  <a href="<%= ENV['PAGE_URL'] %>/create/<%= @memorial[:uuid] %>/photos">Approve Photos</a>  and unchecking the box.
                 <% end %>
               </p>
             </td>
