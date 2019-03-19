@@ -3,6 +3,7 @@ class BillingController < ApplicationController
 
   before_action :set_user
 
+  # POST /billing/purchase
   def purchase
     initialPrice = 6000
     price = initialPrice
