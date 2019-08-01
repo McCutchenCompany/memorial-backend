@@ -1,16 +1,21 @@
 Rails.application.routes.draw do
 
-  resources :user_memorials
-  resources :user_organizations
-  resources :organizations
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
   get 'find_places', to: 'application#find_places'
   get 'photos/:memorial_id', to: 'photos#next_index'
   resources :memories
-
+  
+  resources :user_memorials
+  resources :organizations
   resources :photos
   
+  resources :user_organizations do
+    collection do
+      post 'join_org'
+    end
+  end
+
   resources :response do
     collection do
       post 'support'

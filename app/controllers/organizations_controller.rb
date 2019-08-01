@@ -18,6 +18,7 @@ class OrganizationsController < ApplicationController
   # POST /organizations
   def create
     @organization = Organization.new(organization_params)
+    @organization.user = @user
 
     if @organization.save
       render json: @organization, status: :created, location: @organization
@@ -28,10 +29,14 @@ class OrganizationsController < ApplicationController
 
   # PATCH/PUT /organizations/1
   def update
-    if @organization.update(organization_params)
-      render json: @organization
+    if is_member
+      if @organization.update(organization_params)
+        render json: @organization
+      else
+        render json: @organization.errors, status: :unprocessable_entity
+      end
     else
-      render json: @organization.errors, status: :unprocessable_entity
+      render json: {error: "Only an owner can edit an organization's details"}
     end
   end
 
@@ -50,8 +55,24 @@ class OrganizationsController < ApplicationController
       @user = User.find_by(auth0_id: auth_token[0]['sub'])
     end
 
+    def is_owner
+      if @organization.user[:uuid] == @user[:uuid]
+        return true
+      else
+        return false
+      end
+    end
+
+    def is_member
+      if is_owner || @user.user_organization.where(organization_id: @organization[:uuid]).length > 0
+        return true
+      else
+        return false
+      end
+    end
+
     # Only allow a trusted parameter "white list" through.
     def organization_params
-      params.require(:organization).permit(:user_id, :name, :description, :address, :latitude, :longitude, :invite_link)
+      params.require(:organization).permit(:name, :description, :address, :latitude, :longitude, :invite_link)
     end
 end
