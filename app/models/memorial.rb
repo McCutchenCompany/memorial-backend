@@ -1,8 +1,10 @@
 class Memorial < ApplicationRecord
   include UUID
+  include INVITE_LINK
 
   has_one :location
   has_one :user
+  has_one :organization
   has_one :album_email
 
   has_many :timeline

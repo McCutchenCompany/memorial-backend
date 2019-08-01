@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :user
   has_many :charge
   has_many :photos
+  has_many :organization
 
   has_one :album_email
 

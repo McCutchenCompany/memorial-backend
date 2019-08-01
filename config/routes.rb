@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  resources :user_memorials
+  resources :user_organizations
+  resources :organizations
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
   get 'find_places', to: 'application#find_places'
