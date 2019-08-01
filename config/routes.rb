@@ -7,8 +7,13 @@ Rails.application.routes.draw do
   resources :memories
   
   resources :user_memorials
-  resources :organizations
   resources :photos
+
+  resources :organizations do
+    member do
+      get 'memorials'
+    end
+  end
   
   resources :user_organizations do
     collection do

@@ -1,7 +1,8 @@
 class OrganizationsController < ApplicationController
   include Secured
+  include Order
   before_action :set_user
-  before_action :set_organization, only: [:show, :update, :destroy]
+  before_action :set_organization, only: [:show, :update, :destroy, :memorials]
 
   # GET /organizations
   def index
@@ -13,6 +14,36 @@ class OrganizationsController < ApplicationController
   # GET /organizations/1
   def show
     render json: @organization
+  end
+
+  # GET /organizations/1/memorials
+  def memorials
+    if is_member
+      @pagination = {
+        q: params[:q],
+        p: params[:p],
+        per_p: params[:per_p],
+        total: 0,
+        order: {
+          column: @order.column,
+          dir: @order.direction
+        }
+      }
+      @memorials = @organization.memorial
+        .reorder(@order.column  => @order.direction)
+        .ransack(first_name_or_last_name_cont_any: params[:q].split(" ")).result
+      @pagination[:total] = @memorials.length
+      @memorials = @memorials
+        .paginate(page: params[:p], per_page: params[:per_p])
+        .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date")
+      response = {
+        res: @memorials,
+        pagination: @pagination
+      }
+      render json: response
+    else
+      render json: {error: "You are not a member of this organization"}
+    end
   end
 
   # POST /organizations
