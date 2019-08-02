@@ -46,4 +46,8 @@ class Memorial < ApplicationRecord
     memorial.update(views: memorial[:views] += 1)
   end
 
+  def self.select_without *columns
+    select(column_names - columns.map(&:to_s))
+  end
+
 end

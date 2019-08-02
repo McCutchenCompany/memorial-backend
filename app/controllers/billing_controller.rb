@@ -1,7 +1,7 @@
 class BillingController < ApplicationController
   include Secured
 
-  before_action :set_user
+  before_action :set_user, :set_org
 
   # POST /billing/purchase
   def purchase
@@ -29,13 +29,24 @@ class BillingController < ApplicationController
 
         token = params[:stripeToken]
 
-        begin 
-          stripeCharge = Stripe::Charge.create({
+        if @organization && @organization[:customer_id]
+          chargeObj = {
+            amount: price,
+            currency: 'usd',
+            description: "Memorial Purchase x#{params[:quantity]}",
+            customer: @organization[:customer_id]
+          }
+        else
+          chargeObj = {
             amount: price,
             currency: 'usd',
             description: "Memorial Purchase x#{params[:quantity]}",
             source: token
-          });
+          }
+        end
+
+        begin 
+          stripeCharge = Stripe::Charge.create(chargeObj);
         rescue Stripe::CardError => e
           error = (e.to_s.sub /\(([^)]+)\)/, '').sub /\(([^)]+)\)/, ''
           render json: {error: error || "There was an error processing your payment"}, status: 500
@@ -50,13 +61,10 @@ class BillingController < ApplicationController
           PaymentReceiptMailer.payment_receipt(@user, receipt).deliver      
         end
         @charge.save
-        new_licenses = @user[:licenses] + params[:quantity];
-        if @user.update({licenses: new_licenses})
-          if @memorials = create_memorials(params[:quantity])
-            if @user.update({licenses_in_use: @user[:licenses_in_use] + params[:quantity]})
-              render json: {price: price, licenses: @user[:licenses], memorials: @memorials}
-            end
-          end
+        if @organization
+          set_org_linceses(price)
+        else
+          set_user_licenses(price)
         end
       end
     end
@@ -105,7 +113,26 @@ class BillingController < ApplicationController
     end
   end
 
-  def create_memorials(quantity)
+  # POST /billing/create_customer
+  def create_customer
+    if @organization = Organization.find(params[:org_id])
+      Stripe.api_key = ENV['STRIPE_KEY'];
+      customer = Stripe::Customer.create({
+        email: params[:email],
+        source: params[:stripeToken]
+      })
+      if customer
+        @organization.update({customer_id: customer[:id], card_brand: customer[:sources][:data][0][:brand], card_last_four: customer[:sources][:data][0][:last4]})
+        render json: customer
+      else
+        render json: {error: "There was an error creating your billing accoung"}
+      end
+    else
+      render json: {error: "This is not a valid organization"}
+    end
+  end
+
+  def create_user_memorials(quantity)
     @memorials = []
     quantity.times do |i|
       memorial = @user.memorial.create({})
@@ -114,8 +141,47 @@ class BillingController < ApplicationController
     @memorials
   end
 
+  def create_org_memorials(quantity)
+    @memorials = []
+    quantity.times do |i|
+      memorial = @organization.memorial.create({})
+      @memorials.push(memorial)
+    end
+    @memorials
+  end
+
+  def set_user_licenses(price)
+    new_licenses = @user[:licenses] + params[:quantity];
+    if @user.update({licenses: new_licenses})
+      if @memorials = create_user_memorials(params[:quantity])
+        if @user.update({licenses_in_use: @user[:licenses_in_use] + params[:quantity]})
+          render json: {price: price, licenses: @user[:licenses], memorials: @memorials}
+        end
+      end
+    end
+  end
+
+  def set_org_linceses(price)
+    new_licenses = @organization[:licenses] + params[:quantity];
+    if @organization.update({licenses: new_licenses})
+      if @memorials = create_org_memorials(params[:quantity])
+        if @organization.update({licenses_in_use: @organization[:licenses_in_use] + params[:quantity]})
+          render json: {price: price, licenses: @organization[:licenses], memorials: @memorials}
+        end
+      end
+    end
+  end
+
   private
   def set_user
     @user = User.find_by(auth0_id: auth_token[0]['sub'])
+  end
+
+  def set_org
+    if params[:org_id].present? 
+      @organization = Organization.find(params[:org_id])
+    else
+      @organization = nil
+    end
   end
 end

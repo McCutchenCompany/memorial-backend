@@ -19,4 +19,8 @@ class User < ApplicationRecord
       false
     end
   end
+
+  def self.select_without *columns
+    select(column_names - columns.map(&:to_s))
+  end
 end

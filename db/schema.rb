@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_01_152331) do
+ActiveRecord::Schema.define(version: 2019_08_01_211002) do
 
   create_table "album_emails", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
@@ -64,8 +64,8 @@ ActiveRecord::Schema.define(version: 2019_08_01_152331) do
     t.integer "rot", default: 0
     t.integer "views", default: 0
     t.boolean "public_photo", default: false
-    t.string "organization_id", default: "0"
-    t.string "invite_link", default: "0"
+    t.string "organization_id"
+    t.string "invite_link"
   end
 
   create_table "memories", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -81,8 +81,8 @@ ActiveRecord::Schema.define(version: 2019_08_01_152331) do
 
   create_table "organizations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "user_id"
-    t.integer "licenses"
-    t.integer "licenses_in_use"
+    t.integer "licenses", default: 0
+    t.integer "licenses_in_use", default: 0
     t.string "name"
     t.string "description"
     t.string "address"
@@ -91,6 +91,9 @@ ActiveRecord::Schema.define(version: 2019_08_01_152331) do
     t.string "invite_link"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "customer_id"
+    t.string "card_brand"
+    t.string "card_last_four"
   end
 
   create_table "photos", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|

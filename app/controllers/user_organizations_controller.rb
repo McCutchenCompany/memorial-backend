@@ -8,10 +8,10 @@ class UserOrganizationsController < ApplicationController
     @member_orgs = @user.user_organization
     member_array = Array.new
     @member_orgs.each do |o|
-      member_array << o.organization
+      member_array << o.organization.select_without('customer_id', 'card_brand', 'card_last_four', 'created_at', 'updated_at')
     end
     @user_organizations = {
-      owner: @user.organization,
+      owner: @user.organization.select_without('customer_id', 'card_brand', 'card_last_four', 'created_at', 'updated_at'),
       member: member_array
     }
     render json: @user_organizations

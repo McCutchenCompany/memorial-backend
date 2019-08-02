@@ -7,6 +7,9 @@ class CreateUserOrganizations < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_column :memorials, :invite_link, :string, default: false
+    add_column :memorials, :invite_link, :string
+    Memorial.find_each do |mem|
+      mem.update(invite_link: SecureRandom.uuid)
+    end
   end
 end

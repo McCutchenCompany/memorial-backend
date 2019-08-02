@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       post 'purchase'
       post 'generate_discounts'
       get 'available_discounts'
+      post 'create_customer'
     end
     member do
       get 'check_discount'
