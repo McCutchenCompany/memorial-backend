@@ -7,12 +7,17 @@ Rails.application.routes.draw do
   resources :memories
   
   resources :roles
-  resources :user_memorials
   resources :photos
-
+  
   resources :organizations do
     member do
       get 'memorials'
+    end
+  end
+
+  resources :user_memorials do
+    collection do
+      post 'join_memorial'
     end
   end
   

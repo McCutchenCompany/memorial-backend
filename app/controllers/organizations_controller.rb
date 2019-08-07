@@ -4,25 +4,50 @@ class OrganizationsController < ApplicationController
   before_action :set_user
   before_action :set_organization, only: [:show, :update, :destroy, :memorials]
 
+  skip_before_action :set_user, only: [:index]
+  skip_before_action :authenticate_request!, only: [:index]
+
   # GET /organizations
   def index
+    @pagination = {
+      q: params[:q].nil? ? '' : params[:q],
+      p: params[:p].nil? ? 1 : params[:p],
+      per_p: params[:per_p].nil? ? 10 : params[:per_p],
+      total: 0,
+      order: {
+        column: @order.column,
+        dir: @order.direction
+      }
+    }
     @organizations = Organization.all
-
-    render json: @organizations
+      .reorder(@order.column  => @order.direction)
+      .ransack(name_or_address_cont_any: @pagination[:q].split(" ")).result
+    @pagination[:total] = @organizations.length
+    @organizations = @organizations
+      .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
+    response = {
+      results: @organizations.select_without("user_id", "created_at", "updated_at", "customer_id", "card_brand", "card_last_four", "licenses", "licenses_in_use"),
+      pagination: @pagination
+    }
+    render json: response
   end
 
   # GET /organizations/1
   def show
-    render json: @organization
+    if is_member
+      render json: @organization.select_witout("customer_id")
+    else
+      render json: {error: "You are not a member of this organization"}
+    end
   end
 
   # GET /organizations/1/memorials
   def memorials
     if is_member
       @pagination = {
-        q: params[:q],
-        p: params[:p],
-        per_p: params[:per_p],
+        q: params[:q].nil? ? "" : params[:q],
+        p: params[:p].nil? ? "1" : params[:p],
+        per_p: params[:per_p].nil? ? "10" : params[:per_p],
         total: 0,
         order: {
           column: @order.column,
@@ -31,10 +56,10 @@ class OrganizationsController < ApplicationController
       }
       @memorials = @organization.memorial
         .reorder(@order.column  => @order.direction)
-        .ransack(first_name_or_last_name_cont_any: params[:q].split(" ")).result
+        .ransack(first_name_or_last_name_cont_any: @pagination[:q].split(" ")).result
       @pagination[:total] = @memorials.length
       @memorials = @memorials
-        .paginate(page: params[:p], per_page: params[:per_p])
+        .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
         .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date")
       response = {
         results: @memorials,
@@ -63,7 +88,7 @@ class OrganizationsController < ApplicationController
   def update
     if is_owner
       if @organization.update(organization_params)
-        render json: @organization
+        render json: @organization.select_without("customer_id")
       else
         render json: @organization.errors, status: :unprocessable_entity
       end
@@ -80,7 +105,10 @@ class OrganizationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_organization
-      @organization = Organization.find(params[:id])
+      if is_member
+        @organization = Organization.find(params[:id])
+      else
+      end
     end
 
     def set_user

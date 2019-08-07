@@ -24,9 +24,9 @@ class MemorialsController < ApplicationController
   # GET /memorials
   def index
     @pagination = {
-      q: params[:q],
-      p: params[:p],
-      per_p: params[:per_p],
+      q: params[:q].nil? ? '' : params[:q],
+      p: params[:p].nil? ? 1 : params[:p],
+      per_p: params[:per_p].nil? ? 10 : params[:per_p],
       total: 0,
       order: {
         column: @order.column,
@@ -35,10 +35,10 @@ class MemorialsController < ApplicationController
     }
     @memorials = @user.memorials.select_without("user_id", "created_at", "updated_at", "organization_id", "invite_link")
       .reorder(@order.column  => @order.direction)
-      .ransack(first_name_or_last_name_cont_any: params[:q].split(" ")).result
+      .ransack(first_name_or_last_name_cont_any: @pagination[:q].split(" ")).result
     @pagination[:total] = @memorials.length
     @memorials = @memorials
-      .paginate(page: params[:p], per_page: params[:per_p])
+      .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
       response = {
         results: @memorials,
         pagination: @pagination
@@ -63,6 +63,7 @@ class MemorialsController < ApplicationController
       @photos_count = {approved: @all_photos.select {|p| p[:published] == true}.count, denied: @all_photos.select {|p| p[:denied] == true }.count, need_approval: @all_photos.select {|p| p[:published] == false && p[:denied] == false }.count}
       @response = {
         memorial: @memorial,
+        role: @memorial.role(@user),
         location: @location,
         timeline: @timeline,
         memories: @memories,
@@ -292,7 +293,7 @@ class MemorialsController < ApplicationController
 
       #Create an object for the upload
       if obj.public_url
-        if @memorial.user.where(uuid: @user[:uuid])[0]
+        if @memorial.user.where(uuid: @user[:uuid])[0] || @memorial.org_user(@user)
           published = true;
         else
           published = false
@@ -342,7 +343,15 @@ class MemorialsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
-      @memorial = @user.memorial.where(uuid: params[:id])[0]
+      if @memorial = @user.memorial.where(uuid: params[:id])[0]
+        return
+      else
+        memorial = Memorial.find(params[:id])
+        if memorial.org_user(@user)
+          @memorial = memorial
+        else
+        end
+      end
     end
 
     def set_public_memorial

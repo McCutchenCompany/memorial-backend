@@ -1,4 +1,6 @@
 class UserMemorialsController < ApplicationController
+  include Secured
+  before_action :set_user
   before_action :set_user_memorial, only: [:show, :update, :destroy]
 
   # GET /user_memorials
@@ -42,10 +44,31 @@ class UserMemorialsController < ApplicationController
     @user_memorial.destroy
   end
 
+  # POST /user_memorials/join_memorial
+  def join_memorial
+    @memorial = Memorial.where(invite_link: params[:invite_link])[0]
+    if UserMemorial.where(memorial_id: @memorial[:uuid]).where(user_id: @user[:uuid])[0]
+      render json: @memorial
+    else
+      @user_memorial = UserMemorial.new()
+      @user_memorial.user = @user
+      @user_memorial.memorial = @memorial
+      if @user_memorial.save
+        render json: @memorial, status: :created, location: @user_memorial
+      else
+        render json: @user_memorial.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user_memorial
       @user_memorial = UserMemorial.find(params[:id])
+    end
+    
+    def set_user
+      @user = User.find_by(auth0_id: auth_token[0]['sub'])
     end
 
     # Only allow a trusted parameter "white list" through.

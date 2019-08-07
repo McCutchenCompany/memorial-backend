@@ -2,7 +2,7 @@ class Organization < ApplicationRecord
   include UUID
   include INVITE_LINK
   
-  has_many :memorial
+  has_many :memorials
   has_many :user_organizations, dependent: :delete_all
   has_many :users, through: :user_organizations
 
