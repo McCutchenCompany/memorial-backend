@@ -5,9 +5,28 @@ Rails.application.routes.draw do
   get 'find_places', to: 'application#find_places'
   get 'photos/:memorial_id', to: 'photos#next_index'
   resources :memories
-
+  
+  resources :roles
   resources :photos
   
+  resources :organizations do
+    member do
+      get 'memorials'
+    end
+  end
+
+  resources :user_memorials do
+    collection do
+      post 'join_memorial'
+    end
+  end
+  
+  resources :user_organizations do
+    collection do
+      post 'join_org'
+    end
+  end
+
   resources :response do
     collection do
       post 'support'
@@ -23,6 +42,9 @@ Rails.application.routes.draw do
     end
     member do
       get 'check_discount'
+      post 'create_customer'
+      put 'update_customer'
+      delete 'delete_card'
     end
   end
   

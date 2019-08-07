@@ -1,12 +1,32 @@
 class PublicMemorialsController < ApplicationController
+  include Order
   before_action :set_user
   before_action :set_memorial, only: [:show, :update, :destroy, :location, :timeline]
 
     # GET /public_memorials
     def index
+      @pagination = {
+        q: params[:q].nil? ? '' : params[:q],
+        p: params[:p].nil? ? 1 : params[:p],
+        per_p: params[:per_p].nil? ? 10 : params[:per_p],
+        total: 0,
+        order: {
+          column: @order.column,
+          dir: @order.direction
+        }
+      }
       @memorials = Memorial.where(published: true)
-  
-      render json: Memorial.add_location(@memorials)
+      .reorder(@order.column  => @order.direction)
+        .ransack(first_name_or_last_name_cont_any: @pagination[:q].split(" ")).result
+      @pagination[:total] = @memorials.length
+      @memorials = @memorials
+        .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
+        .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date")
+      response = {
+        results: Memorial.add_location(@memorials),
+        pagination: @pagination
+      }
+      render json: response
     end
   
     # GET /public_memorials/1

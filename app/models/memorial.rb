@@ -1,13 +1,16 @@
 class Memorial < ApplicationRecord
   include UUID
+  include INVITE_LINK
 
   has_one :location
-  has_one :user
+  has_one :organization
   has_one :album_email
-
+  
   has_many :timeline
   has_many :memory
   has_many :photos
+  has_many :user_memorials, dependent: :delete_all
+  has_many :users, through: :user_memorials
 
   def self.search(params)
     records = all
@@ -42,6 +45,28 @@ class Memorial < ApplicationRecord
 
   def self.add_view(memorial)
     memorial.update(views: memorial[:views] += 1)
+  end
+
+  def self.select_without *columns
+    select(column_names - columns.map(&:to_s))
+  end
+
+  def org_user user
+    if self[:organization_id].nil?
+      false
+    else
+      organization = Organization.find(self[:organization_id])
+      true unless organization.users.where(uuid: user[:uuid]).length == 0
+    end
+  end
+
+  def role user
+    if self.org_user user
+      return Role.find(ENV["OWNER_ROLE"])
+    else
+      user_memorial = UserMemorial.where(memorial_id: self[:uuid]).where(user_id: user[:uuid])[0]
+      return Role.where(uuid: user_memorial[:role_id]).select("uuid, name")[0]
+    end
   end
 
 end

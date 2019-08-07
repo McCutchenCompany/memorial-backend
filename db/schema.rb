@@ -10,23 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_15_141513) do
+ActiveRecord::Schema.define(version: 2019_08_02_183122) do
 
-  create_table "album_emails", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "album_emails", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.string "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "charges", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "charges", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "user_id"
     t.float "charge"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "discounts", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "discounts", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.decimal "percent", precision: 15, scale: 10
     t.boolean "available", default: true
     t.string "user_id"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2019_03_15_141513) do
     t.string "code"
   end
 
-  create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "locations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.float "latitude"
     t.float "longitude"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 2019_03_15_141513) do
     t.text "description"
   end
 
-  create_table "memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.binary "user_id"
     t.string "first_name"
     t.string "middle_name"
@@ -64,9 +64,11 @@ ActiveRecord::Schema.define(version: 2019_03_15_141513) do
     t.integer "rot", default: 0
     t.integer "views", default: 0
     t.boolean "public_photo", default: false
+    t.string "organization_id"
+    t.string "invite_link"
   end
 
-  create_table "memories", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "memories", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.string "user_id"
     t.string "title"
@@ -77,7 +79,24 @@ ActiveRecord::Schema.define(version: 2019_03_15_141513) do
     t.boolean "denied", default: false
   end
 
-  create_table "photos", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "organizations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "user_id"
+    t.integer "licenses", default: 0
+    t.integer "licenses_in_use", default: 0
+    t.string "name"
+    t.string "description"
+    t.string "address"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "invite_link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "customer_id"
+    t.string "card_brand"
+    t.string "card_last_four"
+  end
+
+  create_table "photos", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.string "user_id"
     t.string "asset_link"
@@ -89,7 +108,13 @@ ActiveRecord::Schema.define(version: 2019_03_15_141513) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "timelines", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "roles", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "timelines", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.datetime "date"
     t.string "date_format"
@@ -106,7 +131,23 @@ ActiveRecord::Schema.define(version: 2019_03_15_141513) do
     t.integer "rot", default: 0
   end
 
-  create_table "users", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "user_id"
+    t.string "memorial_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "role_id", default: "2cb338a7-0fee-45a2-9c81-4fae4f2f8c79"
+  end
+
+  create_table "user_organizations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "user_id"
+    t.string "organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "role_id", default: "6fe938e7-716f-42e2-a039-0cab4c6def7b"
+  end
+
+  create_table "users", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "auth0_id"
     t.integer "licenses"
     t.integer "licenses_in_use"
