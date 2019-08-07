@@ -37,7 +37,7 @@ class OrganizationsController < ApplicationController
         .paginate(page: params[:p], per_page: params[:per_p])
         .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date")
       response = {
-        res: @memorials,
+        results: @memorials,
         pagination: @pagination
       }
       render json: response
@@ -49,9 +49,10 @@ class OrganizationsController < ApplicationController
   # POST /organizations
   def create
     @organization = Organization.new(organization_params)
-    @organization.user = @user
-
+    
     if @organization.save
+      @role = Role.find(ENV['OWNER_ROLE'])
+      @organization.user_organizations.create({user_id: @user[:uuid], role: @role})
       render json: @organization, status: :created, location: @organization
     else
       render json: @organization.errors, status: :unprocessable_entity
@@ -60,7 +61,7 @@ class OrganizationsController < ApplicationController
 
   # PATCH/PUT /organizations/1
   def update
-    if is_member
+    if is_owner
       if @organization.update(organization_params)
         render json: @organization
       else
@@ -87,7 +88,7 @@ class OrganizationsController < ApplicationController
     end
 
     def is_owner
-      if @organization.user[:uuid] == @user[:uuid]
+      if @organization.user_organizations.where(user_id: @user[:uuid]).where(role_id: ENV['OWNER_ROLE']).length > 0
         return true
       else
         return false
@@ -95,7 +96,8 @@ class OrganizationsController < ApplicationController
     end
 
     def is_member
-      if is_owner || @user.user_organization.where(organization_id: @organization[:uuid]).length > 0
+      @role = @organization.users.where(user_id: @user[:uuid])[0].role
+      if @role[:uuid] == ENV['OWNER_ROLE'] || @role[:uuid] == ENV['MEMBER_ROLE']
         return true
       else
         return false

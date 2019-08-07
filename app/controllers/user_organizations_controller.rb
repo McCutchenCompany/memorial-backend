@@ -5,14 +5,19 @@ class UserOrganizationsController < ApplicationController
 
   # GET /user_organizations
   def index
-    @member_orgs = @user.user_organization
-    member_array = Array.new
-    @member_orgs.each do |o|
-      member_array << o.organization.select_without('customer_id', 'card_brand', 'card_last_four', 'created_at', 'updated_at')
+    @organizations = @user.user_organizations
+    @member_orgs = Array.new
+    @owner_orgs = Array.new
+    @organizations.each do |org|
+      if org[:role_id] == ENV['OWNER_ROLE']
+        @owner_orgs << Organization.where(uuid: org[:organization_id]).select_without('customer_id', 'card_brand', 'card_last_four', 'created_at', 'updated_at')[0]
+      elsif org[:role_id] == ENV['MEMBER_ROLE']
+        @member_orgs << Organization.where(uuid: org[:organization_id]).select_without('customer_id', 'card_brand', 'card_last_four', 'created_at', 'updated_at')[0]
+      end
     end
     @user_organizations = {
-      owner: @user.organization.select_without('customer_id', 'card_brand', 'card_last_four', 'created_at', 'updated_at'),
-      member: member_array
+      owner: @owner_orgs,
+      member: @member_orgs
     }
     render json: @user_organizations
   end

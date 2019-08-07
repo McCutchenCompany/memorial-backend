@@ -3,13 +3,14 @@ class Memorial < ApplicationRecord
   include INVITE_LINK
 
   has_one :location
-  has_one :user
   has_one :organization
   has_one :album_email
-
+  
   has_many :timeline
   has_many :memory
   has_many :photos
+  has_many :user_memorials, dependent: :delete_all
+  has_many :users, through: :user_memorials
 
   def self.search(params)
     records = all

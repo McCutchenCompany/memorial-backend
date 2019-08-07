@@ -113,10 +113,10 @@ class BillingController < ApplicationController
     end
   end
 
-  # POST /billing/create_customer
+  # POST /billing/:org_id/create_customer
   def create_customer
-    if @organization = Organization.find(params[:org_id])
-      Stripe.api_key = ENV['STRIPE_KEY'];
+    if @organization = Organization.find(params[:id])
+      Stripe.api_key = ENV['STRIPE_KEY']
       customer = Stripe::Customer.create({
         email: params[:email],
         source: params[:stripeToken]
@@ -125,10 +125,59 @@ class BillingController < ApplicationController
         @organization.update({customer_id: customer[:id], card_brand: customer[:sources][:data][0][:brand], card_last_four: customer[:sources][:data][0][:last4]})
         render json: customer
       else
-        render json: {error: "There was an error creating your billing accoung"}
+        render json: {error: "There was an error creating your billing account"}
       end
     else
       render json: {error: "This is not a valid organization"}
+    end
+  end
+
+  # PUT /billing/:org_id/update_customer
+  def update_customer
+    if @organization = Organization.find(params[:id])
+      if @organization.is_owner(@user)
+        Stripe.api_key = ENV['STRIPE_KEY']
+        customer = Stripe::Customer.update(
+          @organization[:customer_id],
+          {
+            source: params[:stripeToken]
+          }
+        )
+        if customer
+          @organization.update({customer_id: customer[:id], card_brand: customer[:sources][:data][0][:brand], card_last_four: customer[:sources][:data][0][:last4]})
+          render json: @organization.except_keys(:customer_id)
+        else
+          render json: {error: "There was an error creating your billing account"}
+      end
+      else
+        render json: {error: "You are not the owner of this organization"}
+      end
+    else
+      render json: {error: "Could not find organization"}
+    end
+  end
+
+  # DELETE billing/:org_id/delete_customer
+  def delete_card
+    if @organization = Organization.find(params[:id])
+      if @organization.is_owner(@user) && @organization[:customer_id].present?
+        Stripe.api_key = ENV['STRIPE_KEY']
+        customer = Stripe::Customer.retrieve(@organization[:customer_id])
+        card = Stripe::Customer.delete_source(
+          @organization[:customer_id],
+          customer[:sources][:data][0][:id]
+        )
+        if card[:deleted]
+          @organization.update({customer_id: nil, card_brand: nil, card_last_four: nil})
+          render json: @organization.except_keys(:customer_id)
+        else
+          render json: {error: "There was an error creating your billing account"}
+      end
+      else
+        render json: {error: "You are not the owner of this organization"}
+      end
+    else
+      render json: {error: "Could not find organization"}
     end
   end
 

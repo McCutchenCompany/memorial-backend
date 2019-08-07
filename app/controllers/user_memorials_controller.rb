@@ -15,7 +15,11 @@ class UserMemorialsController < ApplicationController
 
   # POST /user_memorials
   def create
-    @user_memorial = UserMemorial.new(user_memorial_params)
+    @memorial = Memorial.find(params[:memorial_id])
+    @user = User.find(@memorial[:user_id])
+    @user_memorial = @memorial.user_memorials.new()
+    @user_memorial.user = @user
+    # @user_memorial = UserMemorial.new(user_memorial_params)
 
     if @user_memorial.save
       render json: @user_memorial, status: :created, location: @user_memorial

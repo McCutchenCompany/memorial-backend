@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_01_211002) do
+ActiveRecord::Schema.define(version: 2019_08_02_183122) do
 
   create_table "album_emails", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
@@ -108,6 +108,12 @@ ActiveRecord::Schema.define(version: 2019_08_01_211002) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "roles", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "timelines", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
     t.datetime "date"
@@ -128,9 +134,9 @@ ActiveRecord::Schema.define(version: 2019_08_01_211002) do
   create_table "user_memorials", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "user_id"
     t.string "memorial_id"
-    t.integer "permission", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role_id", default: "2cb338a7-0fee-45a2-9c81-4fae4f2f8c79"
   end
 
   create_table "user_organizations", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -138,6 +144,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_211002) do
     t.string "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role_id", default: "6fe938e7-716f-42e2-a039-0cab4c6def7b"
   end
 
   create_table "users", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|

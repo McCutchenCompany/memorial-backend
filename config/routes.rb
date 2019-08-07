@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get 'photos/:memorial_id', to: 'photos#next_index'
   resources :memories
   
+  resources :roles
   resources :user_memorials
   resources :photos
 
@@ -33,10 +34,12 @@ Rails.application.routes.draw do
       post 'purchase'
       post 'generate_discounts'
       get 'available_discounts'
-      post 'create_customer'
     end
     member do
       get 'check_discount'
+      post 'create_customer'
+      put 'update_customer'
+      delete 'delete_card'
     end
   end
   

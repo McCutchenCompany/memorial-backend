@@ -1,6 +1,7 @@
 class MemorialsController < ApplicationController
   require 'uri'
   include Secured
+  include Order
   before_action :set_user
   before_action :set_memorial, only: [
     :show,
@@ -22,9 +23,27 @@ class MemorialsController < ApplicationController
 
   # GET /memorials
   def index
-    @memorials = @user.memorial
-
-    render json: @memorials
+    @pagination = {
+      q: params[:q],
+      p: params[:p],
+      per_p: params[:per_p],
+      total: 0,
+      order: {
+        column: @order.column,
+        dir: @order.direction
+      }
+    }
+    @memorials = @user.memorials.select_without("user_id", "created_at", "updated_at", "organization_id", "invite_link")
+      .reorder(@order.column  => @order.direction)
+      .ransack(first_name_or_last_name_cont_any: params[:q].split(" ")).result
+    @pagination[:total] = @memorials.length
+    @memorials = @memorials
+      .paginate(page: params[:p], per_page: params[:per_p])
+      response = {
+        results: @memorials,
+        pagination: @pagination
+      }
+    render json: response
   end
 
   # GET /memorials/1
@@ -86,7 +105,6 @@ class MemorialsController < ApplicationController
   # POST /memorials
   def create
     if User.can_create(@user)
-      puts 'User can create another memorial'
       @memorial = @user.memorial.new(memorial_params)
 
       if @memorial.save
@@ -97,7 +115,6 @@ class MemorialsController < ApplicationController
         render json: @memorial.errors, status: :unprocessable_entity
       end
     else
-      puts 'User cannot create another memorial'
       render json: {error: "You must purchase another license to create another memorial"}, status: 401
     end
   end
@@ -275,7 +292,7 @@ class MemorialsController < ApplicationController
 
       #Create an object for the upload
       if obj.public_url
-        if @user[:uuid] == @memorial[:user_id]
+        if @memorial.user.where(uuid: @user[:uuid])[0]
           published = true;
         else
           published = false
@@ -325,7 +342,7 @@ class MemorialsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
-      @memorial = Memorial.where(uuid: params[:id], user_id: @user[:uuid])[0]
+      @memorial = @user.memorial.where(uuid: params[:id])[0]
     end
 
     def set_public_memorial
