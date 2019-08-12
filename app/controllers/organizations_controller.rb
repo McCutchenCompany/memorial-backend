@@ -35,7 +35,7 @@ class OrganizationsController < ApplicationController
   # GET /organizations/1
   def show
     if is_member
-      render json: @organization.select_witout("customer_id")
+      render json: @organization.select_without("customer_id")
     else
       render json: {error: "You are not a member of this organization"}
     end
