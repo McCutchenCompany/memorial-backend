@@ -121,7 +121,7 @@ class OrganizationsController < ApplicationController
     end
 
     def is_member
-      @role = @organization.users.where(user_id: @user[:uuid])[0].role
+      @role = @organization.user_organizations.where(user_id: @user[:uuid])[0].role
       if @role[:uuid] == ENV['OWNER_ROLE'] || @role[:uuid] == ENV['MEMBER_ROLE']
         return true
       else
