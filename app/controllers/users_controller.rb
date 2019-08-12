@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 
   def profile
     if @user = User.find_by(auth0_id: auth_token[0]['sub'])
-      render json: {user: @user, memorials: @user.memorial}
+      render json: {user: @user, memorials: @user.memorial, organizations: @user.organizations.select_without("user_id", "created_at", "updated_at", "customer_id", "card_brand", "card_last_four", "licenses", "licenses_in_use")}
     else
       @user = User.new({
         auth0_id: auth_token[0]['sub'],
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
         email: params[:email]
       })
       if @user.save
-        render json: {user: @user, memorials: @user.memorial}, status: :created, location: @user
+        render json: {user: @user, memorials: @user.memorial, organizations: @user.organizations}, status: :created, location: @user
       else
         render json: @user.errors, status: :unprocessable_entity
       end
