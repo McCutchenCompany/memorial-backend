@@ -2,7 +2,7 @@ class OrganizationsController < ApplicationController
   include Secured
   include Order
   before_action :set_user
-  before_action :set_organization, only: [:show, :update, :destroy, :memorials]
+  before_action :set_organization, only: [:show, :update, :destroy, :memorials, :memorial]
 
   skip_before_action :set_user, only: [:index]
   skip_before_action :authenticate_request!, only: [:index]
@@ -60,12 +60,26 @@ class OrganizationsController < ApplicationController
       @pagination[:total] = @memorials.length
       @memorials = @memorials
         .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
-        .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date")
+        .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date, unlocked")
       response = {
         results: @memorials,
         pagination: @pagination
       }
       render json: response
+    else
+      render json: {error: "You are not a member of this organization"}
+    end
+  end
+
+  # POST /organizations/1/memorial
+  def memorial
+    if is_member
+      memorial = @organization.memorials.create({})
+      if memorial
+        render json: memorial
+      else
+        render json: memorial.errors, status: :unprocessable_entity
+      end
     else
       render json: {error: "You are not a member of this organization"}
     end

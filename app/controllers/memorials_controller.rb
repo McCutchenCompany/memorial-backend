@@ -105,18 +105,14 @@ class MemorialsController < ApplicationController
 
   # POST /memorials
   def create
-    if User.can_create(@user)
-      @memorial = @user.memorial.new(memorial_params)
+    @memorial = @user.memorial.new(memorial_params)
 
-      if @memorial.save
-        if @user.update({licenses_in_use: @user[:licenses_in_use] + 1})
-          render json: @memorial, status: :created, location: @memorial
-        end
-      else
-        render json: @memorial.errors, status: :unprocessable_entity
+    if @memorial.save
+      if @user.update({licenses_in_use: @user[:licenses_in_use] + 1})
+        render json: @memorial, status: :created, location: @memorial
       end
     else
-      render json: {error: "You must purchase another license to create another memorial"}, status: 401
+      render json: @memorial.errors, status: :unprocessable_entity
     end
   end
 
@@ -158,26 +154,34 @@ class MemorialsController < ApplicationController
 
   # POST /memorials/:id/timeline
   def timeline
-    if Timeline.create({
-        memorial_id: @memorial[:uuid],
-        description: params[:description],
-        date: params[:date],
-        date_format: params[:date_format],
-        asset_link: params[:asset_link],
-        asset_type: params[:asset_type]
-      })
-      render json: @memorial.timeline
+    if @memorial.unlocked
+      if Timeline.create({
+          memorial_id: @memorial[:uuid],
+          description: params[:description],
+          date: params[:date],
+          date_format: params[:date_format],
+          asset_link: params[:asset_link],
+          asset_type: params[:asset_type]
+        })
+        render json: @memorial.timeline
+      else
+        render json: @memorial.errors, status: :unprocessable_entity
+      end
     else
-      render json: @memorial.errors, status: :unprocessable_entity
+      render json: {error: "Upgrade Memorial to add timeline items"}, status: :unprocessable_entity
     end
   end
 
   # PATCH /memorials/:id/update_timeline
   def update_timeline
-    if Timeline.bulk_update(params[:timelines], @memorial[:uuid])
-      render json: @memorial.timeline
+    if @memorial.unlocked
+      if Timeline.bulk_update(params[:timelines], @memorial[:uuid])
+        render json: @memorial.timeline
+      else
+        render json: {error: 'Unable to save'}, status: :unprocessable_entity
+      end
     else
-      render json: {error: 'Unable to save'}, status: :unprocessable_entity
+      render json: {error: "Upgrade Memorial to add timeline items"}, status: :unprocessable_entity
     end
   end
 
@@ -276,7 +280,7 @@ class MemorialsController < ApplicationController
 
   # POST /memorials/:id/photo
   def photo
-    if @memorial
+    if @memorial.unlocked
       filename = URI.encode(params[:file].original_filename).gsub('%', '');
       s3 = Aws::S3::Resource.new(region: 'us-east-1')
       name = params[:id] + '/album/' + SecureRandom.hex(4) + '-' + filename
@@ -312,7 +316,7 @@ class MemorialsController < ApplicationController
         render json: @memorial.errors, status: :unprocessable_entity
       end
     else
-      render json: {error: 'The memorial does not exist'}, status: :unprocessable_entity
+      render json: {error: 'Unlock the Memorial to add photos'}, status: :unprocessable_entity
     end
   end
 
@@ -320,15 +324,19 @@ class MemorialsController < ApplicationController
   # params: photo_id, denied, published, title, description
   def approve_photo
     if @memorial
-      @photo = Photo.find(params[:photo_id])
-      if @photo[:memorial_id] == @memorial[:uuid]
-        if @photo.update(photo_params)
-          render json: @photo
+      if @memorial.unlocked
+        @photo = Photo.find(params[:photo_id])
+        if @photo[:memorial_id] == @memorial[:uuid]
+          if @photo.update(photo_params)
+            render json: @photo
+          else
+            render json: @photo.error, status: :unprocessable_entity
+          end
         else
-          render json: @photo.error, status: :unprocessable_entity
+          render json: {error: 'This photo does not belong with the memorial'}, status: :unprocessable_entity
         end
       else
-        render json: {error: 'This photo does not belong with the memorial'}, status: :unprocessable_entity
+        render json: {error: "Unlock this Memorial to add photos"}, status: :unprocessable_entity
       end
     else
       render json: {error: 'This memorial does not belong to you'}, status: :unprocessable_entity
@@ -336,9 +344,9 @@ class MemorialsController < ApplicationController
   end
 
   # DELETE /memorials/1
-  def destroy
-    @memorial.destroy
-  end
+  # def destroy
+  #   @memorial.destroy
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -185,7 +185,7 @@ class BillingController < ApplicationController
     @memorials = []
     @role = Role.find(ENV['OWNER_ROLE'])
     quantity.times do |i|
-      memorial = @user.memorials.create({})
+      memorial = @user.memorials.create({unlocked: true})
       user_memorial = memorial.user_memorials.where(user_id: @user[:uuid])
       user_memorial.update({role_id: @role[:uuid]})
       @memorials.push(memorial)
@@ -196,7 +196,7 @@ class BillingController < ApplicationController
   def create_org_memorials(quantity)
     @memorials = []
     quantity.times do |i|
-      memorial = @organization.memorial.create({})
+      memorial = @organization.memorial.create({unlocked: true})
       @memorials.push(memorial)
     end
     @memorials

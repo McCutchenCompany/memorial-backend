@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_02_183122) do
+ActiveRecord::Schema.define(version: 2019_08_13_014806) do
 
   create_table "album_emails", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 2019_08_02_183122) do
     t.boolean "public_photo", default: false
     t.string "organization_id"
     t.string "invite_link"
+    t.boolean "unlocked", default: false
   end
 
   create_table "memories", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -94,6 +95,11 @@ ActiveRecord::Schema.define(version: 2019_08_02_183122) do
     t.string "customer_id"
     t.string "card_brand"
     t.string "card_last_four"
+    t.string "image"
+    t.integer "posY", default: 0
+    t.integer "posX", default: 0
+    t.integer "scale", default: 100
+    t.integer "rot", default: 0
   end
 
   create_table "photos", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|

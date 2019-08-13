@@ -19,14 +19,18 @@ class PhotosController < ApplicationController
   # PATCH/PUT /photos/1
   def update
     @memorial = @photo.memorial
-    if @user[:uuid] != @photo[:user_id] && @user[:uuid] != @memorial[:user_id]
-      render json: {message: 'This photo does not belong to you'}, status: 422
-    else
-      if @photo.update(photo_params)
-        render json: @photo
+    if @memorial.unlocked
+      if @user[:uuid] != @photo[:user_id] && @user[:uuid] != @memorial[:user_id]
+        render json: {message: 'This photo does not belong to you'}, status: 422
       else
-        render json: @photo.errors, status: :unprocessable_entity
+        if @photo.update(photo_params)
+          render json: @photo
+        else
+          render json: @photo.errors, status: :unprocessable_entity
+        end
       end
+    else
+      render json: {error: "Unlock this Memorial to add photos"}, status: :unprocessable_entity
     end
   end
 
@@ -51,12 +55,16 @@ class PhotosController < ApplicationController
   def next_index
     @memorial = Memorial.find(params[:memorial_id])
     if @memorial
-      if @memorial[:public_photo]
-        @photos = Photo.map_users(@memorial.photos)
+      if @memorial.unlcoked
+        if @memorial[:public_photo]
+          @photos = Photo.map_users(@memorial.photos)
+        else
+          @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]))
+        end
+        render json: @photos[params[:index].to_i..params[:index].to_i + 19]
       else
-        @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]))
+        render json: {error: 'Unlock this Memorial to add photos'}, status: :unprocessable_entity
       end
-      render json: @photos[params[:index].to_i..params[:index].to_i + 19]
     else
       render json: {error: 'This memorial does not exist'}, status: :unprocessable_entity
     end

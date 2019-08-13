@@ -69,4 +69,12 @@ class Memorial < ApplicationRecord
     end
   end
 
+  def unlocked
+    if self[:unlocked]
+      true
+    else
+      false
+    end
+  end
+
 end

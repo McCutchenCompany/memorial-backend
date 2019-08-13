@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :organizations do
     member do
       get 'memorials'
+      post 'memorial'
     end
   end
 
