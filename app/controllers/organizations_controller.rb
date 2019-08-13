@@ -54,7 +54,7 @@ class OrganizationsController < ApplicationController
           dir: @order.direction
         }
       }
-      @memorials = @organization.memorial
+      @memorials = @organization.memorials
         .reorder(@order.column  => @order.direction)
         .ransack(first_name_or_last_name_cont_any: @pagination[:q].split(" ")).result
       @pagination[:total] = @memorials.length
