@@ -174,7 +174,7 @@ class OrganizationsController < ApplicationController
   def update
     if is_owner
       if @organization.update(organization_params)
-        render json: @organization.select_without("customer_id")
+        render json: @organization.except_keys("customer_id")
       else
         render json: @organization.errors, status: :unprocessable_entity
       end
