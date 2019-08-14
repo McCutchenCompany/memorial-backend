@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     member do
       get 'check_discount'
       post 'create_customer'
+      post 'unlock'
       put 'update_customer'
       delete 'delete_card'
     end

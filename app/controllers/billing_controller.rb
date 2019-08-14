@@ -2,6 +2,7 @@ class BillingController < ApplicationController
   include Secured
 
   before_action :set_user, :set_org
+  before_action :set_memorial, only: [:unlock]
 
   # POST /billing/purchase
   def purchase
@@ -69,6 +70,75 @@ class BillingController < ApplicationController
       end
     end
 
+  end
+
+  # POST /billing/:id/unlock
+  def unlock
+    if @memorial.unlocked
+      render json: {error: "This memorial is already unlocked"}, status: :unprocessable_entity
+    else
+      initialPrice = 6000
+      price = initialPrice
+      receipt = {}
+      receipt[:price] = initialPrice / 100
+      receipt[:memorial] = params[:id]
+      if (params.has_key?(:discount)) && params[:discount]
+        @discount = Discount.where(code: params[:discount])
+        receipt[:discount_code] = params[:discount]
+        receipt[:discount_percent] = @discount.pluck(:percent)[0]
+        receipt[:discount_one_time] = @discount.pluck(:one_time_use)[0]
+        price = Discount.give_discount(params[:quantity], initialPrice, params[:discount], @user[:uuid]).round
+      end
+      receipt[:total] = (price / 100)
+
+      if price / 100 != params[:price].to_i
+        render json: {error: "The expected price did not match the calculated price"}, status: 500
+      else
+        unless price == 0
+          Stripe.api_key = ENV['STRIPE_KEY'];
+
+          token = params[:stripeToken]
+
+          if @organization && @organization[:customer_id]
+            chargeObj = {
+              amount: price,
+              currency: 'usd',
+              description: "Memorial Purchase x#{params[:quantity]}",
+              customer: @organization[:customer_id]
+            }
+          else
+            chargeObj = {
+              amount: price,
+              currency: 'usd',
+              description: "Memorial Purchase x#{params[:quantity]}",
+              source: token
+            }
+          end
+
+          begin 
+            stripeCharge = Stripe::Charge.create(chargeObj);
+          rescue Stripe::CardError => e
+            error = (e.to_s.sub /\(([^)]+)\)/, '').sub /\(([^)]+)\)/, ''
+            render json: {error: error || "There was an error processing your payment"}, status: 500
+          end
+        end
+        if stripeCharge || price == 0
+          if stripeCharge
+            @charge = @user.charge.new({charge: stripeCharge[:amount]})
+            # PaymentReceiptMailer.payment_receipt(@user, receipt).deliver
+          else
+            @charge = @user.charge.new({charge: 0})
+            # PaymentReceiptMailer.payment_receipt(@user, receipt).deliver      
+          end
+          @charge.save
+          if @memorial.update({unlocked: true})
+            render json: @memorial
+          else
+            render json: @memorial.errors, status: :unprocessable_entity
+          end
+        end
+      end
+    end
   end
 
   def generate_discounts
@@ -229,9 +299,16 @@ class BillingController < ApplicationController
     @user = User.find_by(auth0_id: auth_token[0]['sub'])
   end
 
+  def set_memorial
+    @memorial = Memorial.find(params[:id])
+  end
+
   def set_org
     if params[:org_id].present? 
       @organization = Organization.find(params[:org_id])
+      unless @organization.is_member(@user)
+        @organization = nil
+      end
     else
       @organization = nil
     end
