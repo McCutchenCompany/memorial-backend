@@ -2,7 +2,7 @@ class OrganizationsController < ApplicationController
   include Secured
   include Order
   before_action :set_user
-  before_action :set_organization, only: [:show, :update, :destroy, :memorials, :memorial]
+  before_action :set_organization, only: [:show, :update, :destroy, :memorials, :memorial, :image, :replace_image, :remove_image]
 
   skip_before_action :set_user, only: [:index]
   skip_before_action :authenticate_request!, only: [:index]
@@ -71,6 +71,78 @@ class OrganizationsController < ApplicationController
     end
   end
 
+  # POST /organization/:id/image
+  def image
+    if is_member
+      if @organization
+        filename = URI.encode(params[:file].original_filename).gsub('%', '');
+        s3 = Aws::S3::Resource.new(region: 'us-east-1')
+        name = params[:id] + '/' + filename
+        
+        obj = s3.bucket(ENV['S3_BUCKET']).object(name)
+
+        image = convert_img(params[:file].tempfile.path)
+        File.open(params[:file].tempfile.path, "wb") do |file| 
+          file.write image
+        end
+
+        # Upload the file
+        obj.upload_file(params[:file].tempfile, acl: 'public-read')
+
+        #Create an object for the upload
+        if obj.public_url && @organization.update({image: name, posX: 0, posY: 0, scale: 100, rot: 0})
+          render json: @organization
+        else
+          render json: @organization.errors, status: :unprocessable_entity
+        end
+      else
+        render json: {error: 'The organization does not exist'}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'You are not a member of this organization'}, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /organizations/:id/remove_image
+  def remove_image
+    if is_member
+      if @organization
+        s3 = Aws::S3::Resource.new(region: 'us-east-1')
+        s3_response = s3.bucket(ENV['S3_BUCKET']).object(params[:file]).delete()
+
+        if @organization.update({image: nil, posX: 0, posY: 0, scale: 100, rot: 0})
+          render json: @organization
+        else
+          render json: @organization.errors, status: :unprocessable_entity
+        end
+      else 
+        render json: {error: 'The organization does not exist'}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'You are not a member of this organization'}, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH /organizations/:id/replace_image
+  def replace_image
+    if is_member
+      if @organization[:image]
+        s3 = Aws::S3::Resource.new(region: 'us-east-1')
+        s3_response = s3.bucket(ENV['S3_BUCKET']).object(@organization[:image]).delete()
+
+        if @organization.update({image: nil, posX: 0, posY: 0, scale: 100, rot: 0})
+          image
+        else
+          render json: @organization.errors, status: :unprocessable_entity
+        end
+      else
+        render json: {error: `The organization either doesn't exist or does not have an image`}, status: :unprocessable_entity
+      end
+    else
+      render json: {error: 'You are not a member of this organization'}, status: :unprocessable_entity
+    end
+  end
+
   # POST /organizations/1/memorial
   def memorial
     if is_member
@@ -135,12 +207,26 @@ class OrganizationsController < ApplicationController
     end
 
     def is_member
-      @role = @organization.user_organizations.where(user_id: @user[:uuid])[0].role
-      if @role[:uuid] == ENV['OWNER_ROLE'] || @role[:uuid] == ENV['MEMBER_ROLE']
-        return true
+      if user_org = @organization.user_organizations.where(user_id: @user[:uuid])[0] && @role = user_org.role
+        if @role[:uuid] == ENV['OWNER_ROLE'] || @role[:uuid] == ENV['MEMBER_ROLE']
+          return true
+        else
+          return false
+        end
       else
         return false
       end
+    end
+
+    def convert_img(file)
+      content = MiniMagick::Tool::Convert.new do |convert|
+        convert << file
+        convert.auto_orient
+        convert.strip
+        convert.resize("1180x665")
+        convert.stdout
+      end
+      return content
     end
 
     # Only allow a trusted parameter "white list" through.

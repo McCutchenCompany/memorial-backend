@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     member do
       get 'memorials'
       post 'memorial'
+      post 'image'
+      patch 'replace_image'
+      delete 'remove_image'
     end
   end
 
