@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_13_014806) do
+ActiveRecord::Schema.define(version: 2019_08_14_215420) do
 
   create_table "album_emails", primary_key: "uuid", id: :binary, limit: 36, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "memorial_id"
@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 2019_08_13_014806) do
     t.integer "licenses", default: 0
     t.integer "licenses_in_use", default: 0
     t.string "name"
-    t.string "description"
+    t.text "description"
     t.string "address"
     t.float "latitude"
     t.float "longitude"
