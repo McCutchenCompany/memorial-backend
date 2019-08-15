@@ -56,13 +56,13 @@ class UserOrganizationsController < ApplicationController
   def join_org
     @organization = Organization.where(invite_link: params[:invite_link])[0]
     if @organization.user == @user || UserOrganization.where(organization_id: @organization[:uuid]).where(user_id: @user[:uuid])[0]
-      render json: @organization
+      render json: @organization.except_keys(:customer_id)
     else
       @user_organization = UserOrganization.new()
       @user_organization.user = @user
       @user_organization.organization = @organization
       if @user_organization.save
-        render json: @organization, status: :created, location: @user_organization
+        render json: @organization.except_keys(:customer_id), status: :created, location: @user_organization
       else
         render json: @user_organization.errors, status: :unprocessable_entity
       end
