@@ -60,7 +60,7 @@ class OrganizationsController < ApplicationController
       @pagination[:total] = @memorials.length
       @memorials = @memorials
         .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
-        .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date, unlocked")
+        .select("uuid, first_name, middle_name, last_name, image, birth_date, death_date, unlocked, published")
       response = {
         results: @memorials,
         pagination: @pagination
