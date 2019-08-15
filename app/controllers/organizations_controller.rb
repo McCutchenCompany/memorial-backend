@@ -67,7 +67,7 @@ class OrganizationsController < ApplicationController
       }
       render json: response
     else
-      render json: {error: "You are not a member of this organization"}
+      render json: {error: "You are not a member of this organization"}, status: 422
     end
   end
 
