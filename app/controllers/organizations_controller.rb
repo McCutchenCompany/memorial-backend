@@ -37,7 +37,7 @@ class OrganizationsController < ApplicationController
     if is_member
       render json: @organization.except_keys("customer_id")
     else
-      render json: {error: "You are not a member of this organization"}
+      render json: {error: "You are not a member of this organization"}, status: 422
     end
   end
 
