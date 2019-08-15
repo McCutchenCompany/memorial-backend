@@ -31,7 +31,7 @@ class PublicMemorialsController < ApplicationController
   
     # GET /public_memorials/1
     def show
-      if @memorial[:user_id] == @user[:uuid]
+      if @memorial.can_access(@user)
         @memories = Memory.map_names(@memorial.memory)
       else
         if @memorial[:public_post]
@@ -47,7 +47,7 @@ class PublicMemorialsController < ApplicationController
         @photos = Photo.map_users(@memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).take(20))
         @photo_count = @memorial.photos.where("published = true OR user_id = ?", @user[:uuid]).count
       end
-      if @memorial[:published] || @memorial[:user_id] == @user[:uuid]
+      if @memorial[:published] || @memorial.can_access(@user)
         unless @memorial[:uuid] == "020cac1f-f335-4c0d-831f-7567b9076b61"
           Memorial.add_view(@memorial)
         end

@@ -51,6 +51,17 @@ class Memorial < ApplicationRecord
     select(column_names - columns.map(&:to_s))
   end
 
+  def can_access user
+    user_memorials = self.user_memorials.where(user_id: user[:uuid])
+    if user_memorials.length > 0 && user_memorial = user_memorials[0]
+      return true
+    elsif org_user(user)
+      return true
+    else
+      return false
+    end
+  end
+
   def org_user user
     if self[:organization_id].nil?
       false
