@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 
   def profile
     if @user = User.find_by(auth0_id: auth_token[0]['sub'])
-      render json: {user: @user, memorials: @user.memorial, organizations: @user.organizations.select_without("user_id", "created_at", "updated_at", "customer_id", "card_brand", "card_last_four", "licenses", "licenses_in_use")}
+      render json: {user: @user, memorials: @user.memorials, organizations: @user.organizations.select_without("user_id", "created_at", "updated_at", "customer_id", "card_brand", "card_last_four", "licenses", "licenses_in_use")}
     else
       @user = User.new({
         auth0_id: auth_token[0]['sub'],
