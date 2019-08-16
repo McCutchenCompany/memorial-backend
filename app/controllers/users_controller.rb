@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
   # POST /users/memorial
   def memorial
-    @memorial = @user.memorial.create({})
+    @memorial = @user.memorials.create({})
     if @memorial
       render json: @memorial
     else

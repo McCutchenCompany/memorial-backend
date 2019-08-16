@@ -351,7 +351,7 @@ class MemorialsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
-      if @memorial = @user.memorials.where(uuid: params[:id])[0]
+      if @memorial = @user.memorials.find_by(uuid: params[:id])
         return
       else
         memorial = Memorial.find(params[:id])

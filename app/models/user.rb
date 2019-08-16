@@ -3,7 +3,6 @@ class User < ApplicationRecord
 
   has_one :album_email
   
-  has_many :memorial
   has_many :user
   has_many :charge
   has_many :photos
