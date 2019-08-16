@@ -12,7 +12,8 @@ class User < ApplicationRecord
   
   has_many :organizations, through: :user_organizations
   has_many :memorials, through: :user_memorials
-
+  has_many :roles, through: :user_organizations
+  
   def self.can_create(user)
     puts 'Checked if user can create'
     if user[:licenses] > user[:licenses_in_use]

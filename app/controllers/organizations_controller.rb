@@ -2,7 +2,7 @@ class OrganizationsController < ApplicationController
   include Secured
   include Order
   before_action :set_user
-  before_action :set_organization, only: [:show, :update, :destroy, :memorials, :memorial, :image, :replace_image, :remove_image]
+  before_action :set_organization, only: [:show, :update, :destroy, :memorials, :memorial, :image, :replace_image, :remove_image, :members]
 
   skip_before_action :set_user, only: [:index]
   skip_before_action :authenticate_request!, only: [:index]
@@ -66,6 +66,15 @@ class OrganizationsController < ApplicationController
         pagination: @pagination
       }
       render json: response
+    else
+      render json: {error: "You are not a member of this organization"}, status: 422
+    end
+  end
+
+  # GET /organizations/:id/members
+  def members
+    if is_member
+      render json: @organization.users, include: :roles, except: [:created_at, :updated_at, :auth0_id, :licenses, :licenses_in_use]
     else
       render json: {error: "You are not a member of this organization"}, status: 422
     end
