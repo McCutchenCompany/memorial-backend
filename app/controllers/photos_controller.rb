@@ -55,7 +55,7 @@ class PhotosController < ApplicationController
   def next_index
     @memorial = Memorial.find(params[:memorial_id])
     if @memorial
-      if @memorial.unlcoked
+      if @memorial.unlocked
         if @memorial[:public_photo]
           @photos = Photo.map_users(@memorial.photos)
         else
