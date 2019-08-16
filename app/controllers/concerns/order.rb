@@ -2,7 +2,7 @@ module Order
   extend ActiveSupport::Concern
 
   included do
-  	before_action :set_order, only: [:index, :memorials]
+  	before_action :set_order, only: [:index, :memorials, :members]
   end
 
 private

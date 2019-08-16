@@ -74,7 +74,29 @@ class OrganizationsController < ApplicationController
   # GET /organizations/:id/members
   def members
     if is_member
-      render json: @organization.users, include: :roles, except: [:created_at, :updated_at, :auth0_id, :licenses, :licenses_in_use]
+      # render json: @organization.users, include: :roles, except: [:created_at, :updated_at, :auth0_id, :licenses, :licenses_in_use]      
+      @pagination = {
+        q: params[:q].nil? ? "" : params[:q],
+        p: params[:p].nil? ? "1" : params[:p],
+        per_p: params[:per_p].nil? ? "10" : params[:per_p],
+        total: 0,
+        order: {
+          column: @order.column,
+          dir: @order.direction
+        }
+      }
+      @users = @organization.users
+      .reorder(@order.column  => @order.direction)
+      .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
+      @pagination[:total] = @users.length
+      @users = @users
+        .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
+      user = @users.as_json(include: {roles: { only: [:uuid, :name]}})
+      response = {
+        results: user,
+        pagination: @pagination
+      }
+      render json: response
     else
       render json: {error: "You are not a member of this organization"}, status: 422
     end
