@@ -54,18 +54,21 @@ class UserOrganizationsController < ApplicationController
 
   # POST /user_organizations/join_org
   def join_org
-    @organization = Organization.where(invite_link: params[:invite_link])[0]
-    if UserOrganization.where(organization_id: @organization[:uuid]).where(user_id: @user[:uuid])[0]
-      render json: @organization.except_keys(:customer_id)
-    else
-      @user_organization = UserOrganization.new()
-      @user_organization.user = @user
-      @user_organization.organization = @organization
-      if @user_organization.save
-        render json: @organization.except_keys(:customer_id), status: :created, location: @user_organization
+    if @organization = Organization.find_by(invite_link: params[:invite_link])
+      if UserOrganization.where(organization_id: @organization[:uuid]).where(user_id: @user[:uuid]).present?
+        render json: @organization.except_keys(:customer_id)
       else
-        render json: @user_organization.errors, status: :unprocessable_entity
+        @user_organization = UserOrganization.new()
+        @user_organization.user = @user
+        @user_organization.organization = @organization
+        if @user_organization.save
+          render json: @organization.except_keys(:customer_id), status: :created, location: @user_organization
+        else
+          render json: @user_organization.errors, status: :unprocessable_entity
+        end
       end
+    else
+      render json: {error: "The join link you requested is invalid"}, status: 504
     end
   end
 
