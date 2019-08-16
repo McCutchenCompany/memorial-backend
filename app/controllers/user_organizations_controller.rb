@@ -55,7 +55,7 @@ class UserOrganizationsController < ApplicationController
   # POST /user_organizations/join_org
   def join_org
     @organization = Organization.where(invite_link: params[:invite_link])[0]
-    if @organization.user == @user || UserOrganization.where(organization_id: @organization[:uuid]).where(user_id: @user[:uuid])[0]
+    if UserOrganization.where(organization_id: @organization[:uuid]).where(user_id: @user[:uuid])[0]
       render json: @organization.except_keys(:customer_id)
     else
       @user_organization = UserOrganization.new()
