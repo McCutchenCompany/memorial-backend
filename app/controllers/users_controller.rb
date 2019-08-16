@@ -24,7 +24,7 @@ class UsersController < ApplicationController
         email: params[:email]
       })
       if @user.save
-        render json: {user: @user, memorials: @user.memorial, organizations: @user.organizations}, status: :created, location: @user
+        render json: {user: @user, memorials: @user.memorials, organizations: @user.organizations}, status: :created, location: @user
       else
         render json: @user.errors, status: :unprocessable_entity
       end
