@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   include Secured
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:update, :memorial]
 
   # PATCH/PUT /users/1
   def update
@@ -28,6 +28,16 @@ class UsersController < ApplicationController
       else
         render json: @user.errors, status: :unprocessable_entity
       end
+    end
+  end
+
+  # POST /users/memorial
+  def memorial
+    @memorial = @user.memorial.create({})
+    if @memorial
+      render json: @memorial
+    else
+      render @memorial.errors, status: :unprocessable_entity
     end
   end
 

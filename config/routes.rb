@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       get 'profile'
+      post 'memorial'
     end
   end
   resources :timelines do
