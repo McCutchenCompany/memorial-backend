@@ -368,7 +368,7 @@ class MemorialsController < ApplicationController
       @pagination[:total] = @users.length
       @users = @users
         .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
-      user = @users.as_json(include: {roles: { only: [:uuid, :name]}})
+      user = @users
       response = {
         organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name") : nil,
         results: user,
