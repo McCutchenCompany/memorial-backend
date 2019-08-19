@@ -370,7 +370,7 @@ class MemorialsController < ApplicationController
         .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
       user_memorials = []
       @users.each do |u|
-        user_memorials = u.user_memorials.where(memorial_id: @memorial[:uuid])
+        user_memorials << u.user_memorials.find_by(memorial_id: @memorial[:uuid])
       end
       user = user_memorials.as_json({
         include: [{user: {only: [:uuid, :first_name, :last_name, :email]}}, {role: {only: [:uuid, :name]}}]
