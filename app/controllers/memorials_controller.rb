@@ -362,16 +362,41 @@ class MemorialsController < ApplicationController
           dir: @order.direction
         }
       }
-      @users = @memorial.users
+      # @users = @memorial.users
+      # .reorder(@order.column  => @order.direction)
+      # .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
+      # @pagination[:total] = @users.length
+      # @users = @users
+      #   .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
+      # user = @users
+      # response = {
+      #   organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name") : nil,
+      #   results: user,
+      #   pagination: @pagination
+      # }
+      @users = @memorial.user_memorials
       .reorder(@order.column  => @order.direction)
       .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
       @pagination[:total] = @users.length
       @users = @users
         .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
-      user = @users
+      user = @users.as_json({
+        include: [{user: {only: [:uuid, :first_name, :last_name, :email]}}, {role: {only: [:uuid, :name]}}]
+      })
+      users = []
+      user.each do |u|
+        entity = {
+          uuid: u['user']['uuid'],
+          first_name: u['user']['first_name'],
+          last_name: u['user']['last_name'],
+          email: u['user']['email'],
+          role: u['role']
+        }
+        users << entity
+      end
       response = {
         organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name") : nil,
-        results: user,
+        results: users,
         pagination: @pagination
       }
       render json: response
