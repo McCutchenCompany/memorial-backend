@@ -362,18 +362,6 @@ class MemorialsController < ApplicationController
           dir: @order.direction
         }
       }
-      # @users = @memorial.users
-      # .reorder(@order.column  => @order.direction)
-      # .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
-      # @pagination[:total] = @users.length
-      # @users = @users
-      #   .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
-      # user = @users
-      # response = {
-      #   organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name") : nil,
-      #   results: user,
-      #   pagination: @pagination
-      # }
       @users = @memorial.user_memorials
       .reorder(@order.column  => @order.direction)
       .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
@@ -390,7 +378,7 @@ class MemorialsController < ApplicationController
           first_name: u['user']['first_name'],
           last_name: u['user']['last_name'],
           email: u['user']['email'],
-          role: u['role']
+          roles: u['role']
         }
         users << entity
       end
