@@ -378,7 +378,7 @@ class MemorialsController < ApplicationController
           first_name: u['user']['first_name'],
           last_name: u['user']['last_name'],
           email: u['user']['email'],
-          roles: u['role']
+          roles: [u['role']]
         }
         users << entity
       end
