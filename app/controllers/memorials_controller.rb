@@ -362,13 +362,17 @@ class MemorialsController < ApplicationController
           dir: @order.direction
         }
       }
-      @users = @memorial.user_memorials
+      @users = @memorial.users
       .reorder(@order.column  => @order.direction)
       .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
       @pagination[:total] = @users.length
       @users = @users
         .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
-      user = @users.as_json({
+      user_memorials = []
+      @users.each do |u|
+        user_memorials = u.user_memorials.where(memorial_id: @memorial[:uuid])
+      end
+      user = user_memorials.as_json({
         include: [{user: {only: [:uuid, :first_name, :last_name, :email]}}, {role: {only: [:uuid, :name]}}]
       })
       users = []
