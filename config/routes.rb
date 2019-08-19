@@ -84,6 +84,7 @@ Rails.application.routes.draw do
       post 'image'
       delete 'remove_image'
       patch 'replace_image'
+      get 'members'
     end
   end
   resources :public_memorials, only: [:index, :show] do

@@ -15,7 +15,8 @@ class MemorialsController < ApplicationController
     :update_timeline,
     :memories,
     :approve_photo,
-    :photos
+    :photos,
+    :members
   ]
   before_action :set_public_memorial, only: [
     :photo
@@ -347,6 +348,37 @@ class MemorialsController < ApplicationController
   # def destroy
   #   @memorial.destroy
   # end
+
+  # GET /memorials/:id/members
+  def members
+    if @memorial
+      @pagination = {
+        q: params[:q].nil? ? "" : params[:q],
+        p: params[:p].nil? ? "1" : params[:p],
+        per_p: params[:per_p].nil? ? "10" : params[:per_p],
+        total: 0,
+        order: {
+          column: @order.column,
+          dir: @order.direction
+        }
+      }
+      @users = @memorial.users
+      .reorder(@order.column  => @order.direction)
+      .ransack(first_name_or_last_name_or_email_cont_any: @pagination[:q].split(" ")).result
+      @pagination[:total] = @users.length
+      @users = @users
+        .paginate(page: @pagination[:p], per_page: @pagination[:per_p])
+      user = @users.as_json(include: {roles: { only: [:uuid, :name]}})
+      response = {
+        organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name") : nil,
+        results: user,
+        pagination: @pagination
+      }
+      render json: response
+    else
+      render json: {error: 'You do not have access to this memorial'}, status: 422
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
