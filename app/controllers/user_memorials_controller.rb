@@ -46,8 +46,8 @@ class UserMemorialsController < ApplicationController
 
   # POST /user_memorials/join_memorial
   def join_memorial
-    @memorial = Memorial.where(invite_link: params[:invite_link])[0]
-    if UserMemorial.where(memorial_id: @memorial[:uuid]).where(user_id: @user[:uuid])[0]
+    @memorial = Memorial.find_by(invite_link: params[:invite_link])
+    if UserMemorial.where(memorial_id: @memorial[:uuid]).where(user_id: @user[:uuid]).present?
       render json: @memorial
     else
       @user_memorial = UserMemorial.new()
