@@ -387,7 +387,7 @@ class MemorialsController < ApplicationController
         users << entity
       end
       response = {
-        organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name, image, posY, posX, scale, rot") : nil,
+        organization: @memorial[:organization_id].present? ? Organization.where(uuid: @memorial[:organization_id]).select("uuid, name, address, image, posY, posX, scale, rot") : nil,
         results: users,
         pagination: @pagination
       }
