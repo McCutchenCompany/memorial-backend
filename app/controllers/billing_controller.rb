@@ -6,7 +6,7 @@ class BillingController < ApplicationController
 
   # POST /billing/purchase
   def purchase
-    initialPrice = 6000
+    initialPrice = 5000
     price = initialPrice
     receipt = {}
     receipt[:price] = initialPrice / 100
@@ -77,7 +77,7 @@ class BillingController < ApplicationController
     if @memorial.unlocked
       render json: {error: "This memorial is already unlocked"}, status: :unprocessable_entity
     else
-      initialPrice = 6000
+      initialPrice = 5000
       price = initialPrice
       receipt = {}
       receipt[:price] = initialPrice / 100
