@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  military_branch_id: MyString
+  medal_id: MyString
+  order: 
+
+two:
+  military_branch_id: MyString
+  medal_id: MyString
+  order: 

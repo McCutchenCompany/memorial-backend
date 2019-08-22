@@ -11,6 +11,10 @@ class Memorial < ApplicationRecord
   has_many :photos
   has_many :user_memorials, dependent: :delete_all
   has_many :users, through: :user_memorials
+  has_many :memorial_military_branches, dependent: :delete_all
+  has_many :military_branches, through: :memorial_military_branches
+  has_many :memorial_medals, dependent: :delete_all
+  has_many :medals, through: :memorial_medals
 
   def self.search(params)
     records = all

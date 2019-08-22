@@ -1,0 +1,69 @@
+class MemorialMedalsController < ApplicationController
+  include Secured
+
+  before_action :set_memorial_medal, only: [:update, :destroy]
+  before_action :set_user, only: [:create, :destroy]
+  before_action :set_memorial
+  skip_before_action :authenticate_request!, only: [:index, :show]
+
+  # GET /memorial_medals
+  def index
+    @memorial_medals = MemorialMedal.all
+
+    render json: @memorial_medals
+  end
+
+  # GET /memorial_medals/1
+  def show
+    if @memorial
+      memorial_medals = @memorial.memorial_medals.order(:order).reorder(:order)
+      medals = []
+      memorial_medals.each do |mm|
+        medals << mm.medal
+      end
+      render json: medals.to_json(only: [:uuid, :name, :image])
+    else
+      render json: {error: "Invalid Memorial"}, status: :unprocessable_entity
+    end
+  end
+
+  # POST /memorial_medals
+  def create
+    if @memorial && @memorial.military_branches.present? && @memorial.can_access(@user)
+      @medal = Medal.find(params[:medal_id])
+      @branch = @memorial.military_branches.find(params[:branch_id])
+      order = @branch.military_branch_medals.find_by(medal_id: @medal[:uuid])[:order]
+      @memorial.memorial_medals.create({medal_id: @medal[:uuid], order: order})
+      render json: @memorial.memorial_medals, include: :medal
+    else
+    end
+  end
+
+  # DELETE /memorial_medals/1
+  def destroy
+    @memorial_medal.destroy
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_memorial_medal
+      @memorial_medal = MemorialMedal.find(params[:id])
+    end
+
+    def set_user
+      @user = User.find_by(auth0_id: auth_token[0]['sub'])
+    end
+
+    def set_memorial
+      if params[:memorial_id].present?
+        @memorial = Memorial.find(params[:memorial_id])
+      else
+        @memorial = Memorial.find(params[:id])
+      end
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def memorial_medal_params
+      params.require(:memorial_medal).permit(:memorial_id, :medal_id, :date_awarded, :description, :order)
+    end
+end
