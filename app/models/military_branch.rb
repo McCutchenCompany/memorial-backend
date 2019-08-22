@@ -6,5 +6,4 @@ class MilitaryBranch < ApplicationRecord
   has_many :military_branch_medals, dependent: :delete_all
   has_many :medals, through: :military_branch_medals
 
-  belongs_to :memorial
 end
