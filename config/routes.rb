@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :mem_military_branches_medals
   resources :military_branch_medals
   resources :memorial_medals
   resources :medals
@@ -95,6 +96,7 @@ Rails.application.routes.draw do
       delete 'remove_image'
       patch 'replace_image'
       get 'members'
+      get 'military'
     end
   end
   resources :public_memorials, only: [:index, :show] do

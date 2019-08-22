@@ -16,11 +16,16 @@ class MemorialsController < ApplicationController
     :memories,
     :approve_photo,
     :photos,
-    :members
+    :members,
+    :military
   ]
   before_action :set_public_memorial, only: [
-    :photo
+    :photo,
+    :military
   ]
+
+  skip_before_action :set_user, only: [:military]
+  skip_before_action :authenticate_request!, only: [:military]
 
   # GET /memorials
   def index
@@ -397,10 +402,41 @@ class MemorialsController < ApplicationController
     end
   end
 
+  # GET memorials/:id/military
+  def military
+    if @memorial
+      render json: @memorial.memorial_military_branches, 
+        only: [:uuid, :start_date, :end_date], 
+        include: [
+          {
+            mem_military_branches_medals: {
+              include: {
+                medal: {
+                  only: [
+                    :uuid, :name, :image
+                  ]
+                },
+              },
+              only: [
+                :date_awarded, :description, :order, :uuid
+              ]
+            }
+          },
+          military_branch: {
+            only: [
+              :uuid, :name, :image, :description
+            ]
+          }
+        ]
+    else
+      render json: {error: "This memorial does not exist"}, status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_memorial
-      if @memorial = @user.memorials.find_by(uuid: params[:id])
+      if @user && @memorial = @user.memorials.find_by(uuid: params[:id])
         return
       else
         memorial = Memorial.find(params[:id])

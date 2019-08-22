@@ -92,4 +92,8 @@ class Memorial < ApplicationRecord
     end
   end
 
+  def military
+    
+  end
+
 end

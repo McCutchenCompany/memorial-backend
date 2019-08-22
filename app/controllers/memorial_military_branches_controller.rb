@@ -1,6 +1,6 @@
 class MemorialMilitaryBranchesController < ApplicationController
   include Secured
-  before_action :set_memorial_military_branch, only: [:show, :update, :destroy]
+  before_action :set_memorial_military_branch, only: [:show, :update]
   before_action :set_memorial
   before_action :set_user
 
@@ -19,11 +19,12 @@ class MemorialMilitaryBranchesController < ApplicationController
   # POST /memorial_military_branches
   def create
     if @memorial && @memorial.can_access(@user)
-      unless @memorial.military_branches.find(params[:military_branch_id]).present?
+      if @memorial.military_branches.where(uuid: params[:military_branch_id]).empty?
         MemorialMilitaryBranch.create({military_branch_id: params[:military_branch_id], memorial_id: @memorial[:uuid]})
         render json: @memorial.military_branches, only: [:uuid, :name, :image, :description]
-      end
+      else
         render json: {error: "Branch already associated with Memorial"}, status: :unprocessable_entity
+      end
     else
       render json: {error: "You do not have access to this Memorial"}, status: 422
     end
@@ -40,7 +41,14 @@ class MemorialMilitaryBranchesController < ApplicationController
 
   # DELETE /memorial_military_branches/1
   def destroy
-    @memorial_military_branch.destroy
+    if @memorial.can_access(@user)
+      if @memorial_military_branch = @memorial.memorial_military_branches.find_by(military_branch_id: params[:military_branch_id])
+        @memorial_military_branch.destroy
+        render json: {success: "Branch removed"}
+      else
+        render json: {error: "An error occurred while deleting military branch"}, status: :unprocessable_entity
+      end
+    end
   end
 
   private
