@@ -854,6 +854,7 @@ end
 Medal.find_or_create_by!(uuid: "600a7c2e-46af-43df-9632-d506d3b79b6c") do |medal|
   medal.name = "RVN Campaign Medal"
   medal.image = "https://memorial-imgs.s3.amazonaws.com/military/medals/Vietnam_Campaign_Medal_ribbon_with_60-_clasp.png"
+end
 Medal.find_or_create_by!(uuid: "63b8b799-1832-4a17-8b83-10fa0571b064") do |medal|
   medal.name = "Kuwait Liberation Medal (Saudi Arabia)"
   medal.image = "https://memorial-imgs.s3.amazonaws.com/military/medals/Kuwait_Liberation_Medal_(Saudi_Arabia)_ribbon.png"
@@ -1394,4 +1395,4 @@ end
 # @army.military_branch_medals.create!({medal_id: "", order: 78}) unless @army.military_branch_medals.find_by(medal_id: "").present?
 ## TODO Vietnam Naval Service Medal
 # @army.military_branch_medals.create!({medal_id: "", order: 79}) unless @army.military_branch_medals.find_by(medal_id: "").present?
-@army.military_branch_medals.create!({medal_id: "b67457fc-1164-420f-a907-e0a04969be02", order: 80}) unless @army.military_branch_medals.find_by(medal_id: "b67457fc-1164-420f-a907-e0a04969be02").present? end
+@army.military_branch_medals.create!({medal_id: "b67457fc-1164-420f-a907-e0a04969be02", order: 80}) unless @army.military_branch_medals.find_by(medal_id: "b67457fc-1164-420f-a907-e0a04969be02").present?
