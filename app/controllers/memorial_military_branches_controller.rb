@@ -1,7 +1,7 @@
 class MemorialMilitaryBranchesController < ApplicationController
   include Secured
   before_action :set_memorial_military_branch, only: [:show, :update, :destroy]
-  before_action :set_memorial
+  before_action :set_memorial, only: [:create]
   before_action :set_user
 
   # GET /memorial_military_branches
@@ -89,8 +89,8 @@ class MemorialMilitaryBranchesController < ApplicationController
             ]
           }
         ]
-      else
-        render json: {error: "An error occurred while deleting military branch"}, status: :unprocessable_entity
+    else
+      render json: {error: "An error occurred while deleting military branch"}, status: :unprocessable_entity
     end
   end
 
