@@ -5,7 +5,7 @@ class MilitaryBranchesController < ApplicationController
   def index
     @military_branches = MilitaryBranch.all
 
-    render json: @military_branches
+    render json: @military_branches, only: [:uuid, :name, :image, :description]
   end
 
   # GET /military_branches/1
