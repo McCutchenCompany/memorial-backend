@@ -1,6 +1,6 @@
 class MemorialMilitaryBranchesController < ApplicationController
   include Secured
-  before_action :set_memorial_military_branch, only: [:show, :update]
+  before_action :set_memorial_military_branch, only: [:show, :update, :destroy]
   before_action :set_memorial
   before_action :set_user
 
@@ -63,35 +63,34 @@ class MemorialMilitaryBranchesController < ApplicationController
 
   # DELETE /memorial_military_branches/1
   def destroy
+    @memorial = @memorial_military_branch.memorial
     if @memorial.can_access(@user)
-      if @memorial_military_branch = @memorial.memorial_military_branches.find_by(military_branch_id: params[:military_branch_id])
-        @memorial_military_branch.destroy
-        render json: @memorial.memorial_military_branches, 
-          only: [:uuid, :start_date, :end_date], 
-          include: [
-            {
-              mem_military_branches_medals: {
-                include: {
-                  medal: {
-                    only: [
-                      :uuid, :name, :image
-                    ]
-                  },
+      @memorial_military_branch.destroy
+      render json: @memorial.memorial_military_branches, 
+        only: [:uuid, :start_date, :end_date], 
+        include: [
+          {
+            mem_military_branches_medals: {
+              include: {
+                medal: {
+                  only: [
+                    :uuid, :name, :image
+                  ]
                 },
-                only: [
-                  :date_awarded, :description, :order, :uuid
-                ]
-              }
-            },
-            military_branch: {
+              },
               only: [
-                :uuid, :name, :image, :description
+                :date_awarded, :description, :order, :uuid
               ]
             }
-          ]
+          },
+          military_branch: {
+            only: [
+              :uuid, :name, :image, :description
+            ]
+          }
+        ]
       else
         render json: {error: "An error occurred while deleting military branch"}, status: :unprocessable_entity
-      end
     end
   end
 
