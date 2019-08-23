@@ -1,5 +1,6 @@
 class UserOrganization < ApplicationRecord
   include UUID
+  default_scope { order(created_at: :desc) }
   
   belongs_to :user, required: true
   belongs_to :organization, required: true

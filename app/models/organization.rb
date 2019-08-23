@@ -1,6 +1,7 @@
 class Organization < ApplicationRecord
   include UUID
   include INVITE_LINK
+  default_scope { order(created_at: :desc) }
   
   has_many :memorials
   has_many :user_organizations, dependent: :delete_all

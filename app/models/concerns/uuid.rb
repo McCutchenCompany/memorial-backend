@@ -5,8 +5,6 @@ module UUID
     before_create :set_uuid
 
     validates :uuid, uniqueness: true #just to be 110% safe
-
-    default_scope { order(created_at: :desc) }
   end
 
   private

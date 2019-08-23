@@ -1,6 +1,7 @@
 class Memorial < ApplicationRecord
   include UUID
   include INVITE_LINK
+  default_scope { order(created_at: :desc) }
 
   has_one :location
   has_one :organization

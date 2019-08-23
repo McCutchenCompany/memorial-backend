@@ -1,5 +1,6 @@
 class Medal < ApplicationRecord
   include UUID
+  default_scope { order(created_at: :desc) }
 
   has_many :military_branch_medals, dependent: :delete_all
   has_many :military_branches, through: :military_branch_medals

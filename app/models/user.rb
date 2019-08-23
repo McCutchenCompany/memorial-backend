@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include UUID
+  default_scope { order(created_at: :desc) }
 
   has_one :album_email
   

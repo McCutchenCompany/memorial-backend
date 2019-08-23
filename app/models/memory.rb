@@ -1,5 +1,6 @@
 class Memory < ApplicationRecord
   include UUID
+  default_scope { order(created_at: :desc) }
 
   belongs_to :memorial
   belongs_to :user
