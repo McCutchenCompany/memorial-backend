@@ -34,12 +34,30 @@ class MemorialMedalsController < ApplicationController
       @branch = @memorial.military_branches.find(params[:branch_id])
       if @mem_branch = @memorial.memorial_military_branches.find_by({military_branch_id: @branch[:uuid]})
         order = @branch.military_branch_medals.find_by(medal_id: @medal[:uuid])[:order]
-        puts "+++++++++++++++++"
-        puts "+++++++++++++++++"
-        puts "+++++++++++++++++"
-        puts @mem_branch.mem_military_branches_medals
         @mem_branch.mem_military_branches_medals.find_or_create_by({medal_id: @medal[:uuid], order: order})
-        render json: @mem_branch.medals, only: [:uuid, :name, :image]
+        render json: @memorial.memorial_military_branches,
+          only: [:uuid, :start_date, :end_date], 
+          include: [
+            {
+              mem_military_branches_medals: {
+                include: {
+                  medal: {
+                    only: [
+                      :uuid, :name, :image
+                    ]
+                  },
+                },
+                only: [
+                  :date_awarded, :description, :order, :uuid
+                ]
+              }
+            },
+            military_branch: {
+              only: [
+                :uuid, :name, :image, :description
+              ]
+            }
+          ]
       else  
         render json: {error: "Memorial is not in the military branch"}, status: :unprocessable_entity
       end
