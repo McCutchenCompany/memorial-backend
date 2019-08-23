@@ -851,7 +851,7 @@ Medal.find_or_create_by!(uuid: "00e9c865-068b-4237-baa7-87ebb25f5dba") do |medal
   medal.name = "Inter-American Defense Board Medal"
   medal.image = "https://memorial-imgs.s3.amazonaws.com/military/medals/Inter-american_defense_board_medal_ribbon.png"
 end
-Medal.find_or_create_by(uuid: "600a7c2e-46af-43df-9632-d506d3b79b6c") do |medal|
+Medal.find_or_create_by!(uuid: "600a7c2e-46af-43df-9632-d506d3b79b6c") do |medal|
   medal.name = "RVN Campaign Medal"
   medal.image = "https://memorial-imgs.s3.amazonaws.com/military/medals/Vietnam_Campaign_Medal_ribbon_with_60-_clasp.png"
 Medal.find_or_create_by!(uuid: "63b8b799-1832-4a17-8b83-10fa0571b064") do |medal|
