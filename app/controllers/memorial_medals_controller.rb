@@ -3,7 +3,7 @@ class MemorialMedalsController < ApplicationController
 
   before_action :set_memorial_medal, only: [:update, :destroy]
   before_action :set_user, only: [:create, :destroy]
-  before_action :set_memorial
+  before_action :set_memorial, only: [:create]
   skip_before_action :authenticate_request!, only: [:index, :show]
 
   # GET /memorial_medals
@@ -62,11 +62,13 @@ class MemorialMedalsController < ApplicationController
         render json: {error: "Memorial is not in the military branch"}, status: :unprocessable_entity
       end
     else
+      render json: {error: "Could not save"}, status: :unprocessable_entity
     end
   end
 
   # DELETE /memorial_medals/1
   def destroy
+    if @memorial && @memorial.military_branches.present? && @memorial.can_access(@user)
     @memorial_medal.destroy
   end
 

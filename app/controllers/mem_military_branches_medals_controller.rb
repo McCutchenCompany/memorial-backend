@@ -1,5 +1,7 @@
 class MemMilitaryBranchesMedalsController < ApplicationController
+  include Secured
   before_action :set_mem_military_branches_medal, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:destroy]
 
   # GET /mem_military_branches_medals
   def index
@@ -35,13 +37,46 @@ class MemMilitaryBranchesMedalsController < ApplicationController
 
   # DELETE /mem_military_branches_medals/1
   def destroy
-    @mem_military_branches_medal.destroy
+    @memorial_military_branch = @mem_military_branches_medal.memorial_military_branch
+    @memorial = @memorial_military_branch.memorial
+    if @memorial.can_access(@user)
+      @mem_military_branches_medal.destroy
+      render json: @memorial.memorial_military_branches,
+        only: [:uuid, :start_date, :end_date], 
+        include: [
+          {
+            mem_military_branches_medals: {
+              include: {
+                medal: {
+                  only: [
+                    :uuid, :name, :image
+                  ]
+                },
+              },
+              only: [
+                :date_awarded, :description, :order, :uuid
+              ]
+            }
+          },
+          military_branch: {
+            only: [
+              :uuid, :name, :image, :description
+            ]
+          }
+        ]
+    else
+      render json: {error: "You do not have edit access to this memorial"}, status: 422
+    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_mem_military_branches_medal
       @mem_military_branches_medal = MemMilitaryBranchesMedal.find(params[:id])
+    end
+
+    def set_user
+      @user = User.find_by(auth0_id: auth_token[0]['sub'])
     end
 
     # Only allow a trusted parameter "white list" through.
