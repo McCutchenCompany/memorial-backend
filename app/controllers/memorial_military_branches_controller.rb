@@ -21,7 +21,29 @@ class MemorialMilitaryBranchesController < ApplicationController
     if @memorial && @memorial.can_access(@user)
       if @memorial.military_branches.where(uuid: params[:military_branch_id]).empty?
         MemorialMilitaryBranch.create({military_branch_id: params[:military_branch_id], memorial_id: @memorial[:uuid]})
-        render json: @memorial.military_branches, only: [:uuid, :name, :image, :description]
+        render json: @memorial.memorial_military_branches, 
+          only: [:uuid, :start_date, :end_date], 
+          include: [
+            {
+              mem_military_branches_medals: {
+                include: {
+                  medal: {
+                    only: [
+                      :uuid, :name, :image
+                    ]
+                  },
+                },
+                only: [
+                  :date_awarded, :description, :order, :uuid
+                ]
+              }
+            },
+            military_branch: {
+              only: [
+                :uuid, :name, :image, :description
+              ]
+            }
+          ]
       else
         render json: {error: "Branch already associated with Memorial"}, status: :unprocessable_entity
       end
