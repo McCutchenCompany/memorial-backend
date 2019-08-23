@@ -68,7 +68,6 @@ class MemorialMedalsController < ApplicationController
 
   # DELETE /memorial_medals/1
   def destroy
-    if @memorial && @memorial.military_branches.present? && @memorial.can_access(@user)
     @memorial_medal.destroy
   end
 
