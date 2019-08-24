@@ -55,7 +55,30 @@ class MemorialMilitaryBranchesController < ApplicationController
   # PATCH/PUT /memorial_military_branches/1
   def update
     if @memorial_military_branch.update(memorial_military_branch_params)
-      render json: @memorial_military_branch
+      @memorial = @memorial_military_branch.memorial
+      render json: @memorial.memorial_military_branches, 
+        only: [:uuid, :start_date, :end_date], 
+        include: [
+          {
+            mem_military_branches_medals: {
+              include: {
+                medal: {
+                  only: [
+                    :uuid, :name, :image
+                  ]
+                },
+              },
+              only: [
+                :date_awarded, :description, :order, :uuid
+              ]
+            }
+          },
+          military_branch: {
+            only: [
+              :uuid, :name, :image, :description
+            ]
+          }
+        ]
     else
       render json: @memorial_military_branch.errors, status: :unprocessable_entity
     end
@@ -110,6 +133,9 @@ class MemorialMilitaryBranchesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def memorial_military_branch_params
-      params.fetch(:memorial_military_branch, {})
+      params.require(:memorial_military_branch).permit(
+        :start_date,
+        :end_date
+      )
     end
 end
