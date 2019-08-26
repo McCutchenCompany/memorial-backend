@@ -1396,3 +1396,590 @@ end
 ## TODO Vietnam Naval Service Medal
 # @army.military_branch_medals.create!({medal_id: "", order: 79}) unless @army.military_branch_medals.find_by(medal_id: "").present?
 @army.military_branch_medals.create!({medal_id: "b67457fc-1164-420f-a907-e0a04969be02", order: 80}) unless @army.military_branch_medals.find_by(medal_id: "b67457fc-1164-420f-a907-e0a04969be02").present?
+
+
+@navy.military_ranks.create!({
+  name: "Seaman Recruit",
+  image: "",
+  order: 1}) unless @navy.military_ranks.find_by(name: "Seaman Recruit").present?
+@navy.military_ranks.create!({
+  name: "Fireman Recruit",
+  image: "",
+  order: 2}) unless @navy.military_ranks.find_by(name: "Fireman Recruit").present?
+@navy.military_ranks.create!({
+  name: "Airman Recruit",
+  image: "",
+  order: 3}) unless @navy.military_ranks.find_by(name: "Airman Recruit").present?
+@navy.military_ranks.create!({
+  name: "Construtionman Recruit",
+  image: "",
+  order: 4}) unless @navy.military_ranks.find_by(name: "Construtionman Recruit").present?
+@navy.military_ranks.create!({
+  name: "Seaman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Seaman_Apprentice.png",
+  order: 5}) unless @navy.military_ranks.find_by(name: "Seaman Apprentice").present?
+@navy.military_ranks.create!({
+  name: "Fireman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Fireman_Apprentice.png",
+  order: 6}) unless @navy.military_ranks.find_by(name: "Fireman Apprentice").present?
+@navy.military_ranks.create!({
+  name: "Airman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Airman_Apprentice.png",
+  order: 7}) unless @navy.military_ranks.find_by(name: "Airman Apprentice").present?
+@navy.military_ranks.create!({
+  name: "Constructionman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Constructionman_Apprentice.png",
+  order: 8}) unless @navy.military_ranks.find_by(name: "Constructionman Apprentice").present?
+@navy.military_ranks.create!({
+  name: "Seaman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Seaman.png",
+  order: 9}) unless @navy.military_ranks.find_by(name: "Seaman").present?
+@navy.military_ranks.create!({
+  name: "Fireman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Fireman.png",
+  order: 10}) unless @navy.military_ranks.find_by(name: "Fireman").present?
+@navy.military_ranks.create!({
+  name: "Airman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Airman.png",
+  order: 11}) unless @navy.military_ranks.find_by(name: "Airman").present?
+@navy.military_ranks.create!({
+  name: "Constructionman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Constructionman.png",
+  order: 12}) unless @navy.military_ranks.find_by(name: "Constructionman").present?
+@navy.military_ranks.create!({
+  name: "Petty Officer Third Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Petty_Officer_Third_Class.png",
+  order: 13}) unless @navy.military_ranks.find_by(name: "Petty Officer Third Class").present?
+@navy.military_ranks.create!({
+  name: "Petty Officer Second Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Petty_Officer_Second_Class.png",
+  order: 14}) unless @navy.military_ranks.find_by(name: "Petty Officer Second Class").present?
+@navy.military_ranks.create!({
+  name: "Petty Officer First Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Petty_Officer_First_Class.png",
+  order: 15}) unless @navy.military_ranks.find_by(name: "Petty Officer First Class").present?
+@navy.military_ranks.create!({
+  name: "Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Chief_Petty_Officer.png",
+  order: 16}) unless @navy.military_ranks.find_by(name: "Chief Petty Officer").present?
+@navy.military_ranks.create!({
+  name: "Senior Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Command_Senior_Chief_Petty_Officer.png",
+  order: 17}) unless @navy.military_ranks.find_by(name: "Senior Chief Petty Officer").present?
+@navy.military_ranks.create!({
+  name: "Master Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Master_Chief_Petty_Officer.png",
+  order: 18}) unless @navy.military_ranks.find_by(name: "Master Chief Petty Officer").present?
+@navy.military_ranks.create!({
+  name: "Command Senior Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Command_Senior_Chief_Petty_Officer.png",
+  order: 19}) unless @navy.military_ranks.find_by(name: "Command Senior Chief Petty Officer").present?
+@navy.military_ranks.create!({
+  name: "Command Master Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Command_Master_Chief_Petty_Officer.png",
+  order: 20}) unless @navy.military_ranks.find_by(name: "Command Master Chief Petty Officer").present?
+@navy.military_ranks.create!({
+  name: "Fleet/Force Master Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Fleet_Master_Chief_Petty_Officer.png",
+  order: 21}) unless @navy.military_ranks.find_by(name: "Fleet/Force Master Chief Petty Officer").present?
+@navy.military_ranks.create!({
+  name: "Master Chief Petty Officer of the Navy",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Master_Chief_Petty_Officer_of_the_Navy.png",
+  order: 22}) unless @navy.military_ranks.find_by(name: "Master Chief Petty Officer of the Navy").present?
+@navy.military_ranks.create!({
+  name: "Warrant Officer One",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Warrant_Officer_1.png",
+  order: 23}) unless @navy.military_ranks.find_by(name: "Warrant Officer One").present?
+@navy.military_ranks.create!({
+  name: "Chief Warrant Officer Two",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Chief_Warrant_Officer_2.png",
+  order: 24}) unless @navy.military_ranks.find_by(name: "Chief Warrant Officer Two").present?
+@navy.military_ranks.create!({
+  name: "Chief Warrant Officer Three",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Chief_Warrant_Officer_3.png",
+  order: 25}) unless @navy.military_ranks.find_by(name: "Chief Warrant Officer Three").present?
+@navy.military_ranks.create!({
+  name: "Chief Warrant Officer Four",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Chief_Warrant_Officer_4.png",
+  order: 26}) unless @navy.military_ranks.find_by(name: "Chief Warrant Officer Four").present?
+@navy.military_ranks.create!({
+  name: "Chief Warrant Officer Five",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Chief_Warrant_Officer_5.png",
+  order: 27}) unless @navy.military_ranks.find_by(name: "Chief Warrant Officer Five").present?
+@navy.military_ranks.create!({
+  name: "Ensign",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Ensign.png",
+  order: 28}) unless @navy.military_ranks.find_by(name: "Ensign").present?
+@navy.military_ranks.create!({
+  name: "Lieutenant (Junior Grade)",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Lieutenant_Junior.png",
+  order: 29}) unless @navy.military_ranks.find_by(name: "Lieutenant (Junior Grade)").present?
+@navy.military_ranks.create!({
+  name: "Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Lieutenant.png",
+  order: 30}) unless @navy.military_ranks.find_by(name: "Lieutenant").present?
+@navy.military_ranks.create!({
+  name: "Lieutenant Commander",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Lieutenant_Commander.png",
+  order: 31}) unless @navy.military_ranks.find_by(name: "Lieutenant Commander").present?
+@navy.military_ranks.create!({
+  name: "Commander",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Commander.png",
+  order: 32}) unless @navy.military_ranks.find_by(name: "Commander").present?
+@navy.military_ranks.create!({
+  name: "Captain",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Captain.png",
+  order: 33}) unless @navy.military_ranks.find_by(name: "Captain").present?
+@navy.military_ranks.create!({
+  name: "Rear Admiral (Lower Half)",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Rear_Admiral_Lower.png",
+  order: 34}) unless @navy.military_ranks.find_by(name: "Rear Admiral (Lower Half)").present?
+@navy.military_ranks.create!({
+  name: "Rear Admiral",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Rear_Admiral.png",
+  order: 35}) unless @navy.military_ranks.find_by(name: "Rear Admiral").present?
+@navy.military_ranks.create!({
+  name: "Vice Admiral",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Vice_Admiral.png",
+  order: 36}) unless @navy.military_ranks.find_by(name: "Vice Admiral").present?
+@navy.military_ranks.create!({
+  name: "Fleet Admiral",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/navy/Navy_Fleet_Admiral.png",
+  order: 37}) unless @navy.military_ranks.find_by(name: "Fleet Admiral").present?
+
+@marines.military_ranks.create!({
+  name: "Private",
+  image: "",
+  order: 1}) unless @marines.military_ranks.find_by(name: "Private").present?
+@marines.military_ranks.create!({
+  name: "Private First Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Private_First_Class.png",
+  order: 2}) unless @marines.military_ranks.find_by(name: "Private First Class").present?
+@marines.military_ranks.create!({
+  name: "Lance Corporal",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Lance_Corporal.png",
+  order: 3}) unless @marines.military_ranks.find_by(name: "Lance Corporal").present?
+@marines.military_ranks.create!({
+  name: "Corporal",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Corporal.png",
+  order: 4}) unless @marines.military_ranks.find_by(name: "Corporal").present?
+@marines.military_ranks.create!({
+  name: "Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Sergeant.png",
+  order: 5}) unless @marines.military_ranks.find_by(name: "Sergeant").present?
+@marines.military_ranks.create!({
+  name: "Staff Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Staff_Sergeant.png",
+  order: 6}) unless @marines.military_ranks.find_by(name: "Staff Sergeant").present?
+@marines.military_ranks.create!({
+  name: "Gunnery Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Gunnery_Sergeant.png",
+  order: 7}) unless @marines.military_ranks.find_by(name: "Gunnery Sergeant").present?
+@marines.military_ranks.create!({
+  name: "Master Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Master_Sergeant.png",
+  order: 8}) unless @marines.military_ranks.find_by(name: "Master Sergeant").present?
+@marines.military_ranks.create!({
+  name: "First Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_First_Sergeant.png",
+  order: 9}) unless @marines.military_ranks.find_by(name: "First Sergeant").present?
+@marines.military_ranks.create!({
+  name: "Master Gunnery Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Master_Gunnery_Sergeant.png",
+  order: 10}) unless @marines.military_ranks.find_by(name: "Master Gunnery Sergeant").present?
+@marines.military_ranks.create!({
+  name: "Sergeant Major",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Sergeant_Major.png",
+  order: 11}) unless @marines.military_ranks.find_by(name: "Sergeant Major").present?
+@marines.military_ranks.create!({
+  name: "Sergeant Major of the Marine Corps",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Sergeant_Major_of_the_Marine_Corps.png",
+  order: 12}) unless @marines.military_ranks.find_by(name: "Sergeant Major of the Marine Corps").present?
+@marines.military_ranks.create!({
+  name: "Warrant Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Warrant_Officer_1.png",
+  order: 13}) unless @marines.military_ranks.find_by(name: "Warrant Officer").present?
+@marines.military_ranks.create!({
+  name: "Chief Warrant Officer Two",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Chief_Warrant_Officer_2.png",
+  order: 14}) unless @marines.military_ranks.find_by(name: "Chief Warrant Officer Two").present?
+@marines.military_ranks.create!({
+  name: "Chief Warrant Officer Three",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Chief_Warrant_Officer_3.png",
+  order: 15}) unless @marines.military_ranks.find_by(name: "Chief Warrant Officer Three").present?
+@marines.military_ranks.create!({
+  name: "Chief Warrant Officer Four",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Chief_Warrant_Officer_4.png",
+  order: 16}) unless @marines.military_ranks.find_by(name: "Chief Warrant Officer Four").present?
+@marines.military_ranks.create!({
+  name: "Chief Warrant Officer Five",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Chief_Warrant_Officer_5.png",
+  order: 17}) unless @marines.military_ranks.find_by(name: "Chief Warrant Officer Five").present?
+@marines.military_ranks.create!({
+  name: "Second Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Second_Lieutenant.png",
+  order: 18}) unless @marines.military_ranks.find_by(name: "Second Lieutenant").present?
+@marines.military_ranks.create!({
+  name: "First Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_First_Lieutenant.png",
+  order: 19}) unless @marines.military_ranks.find_by(name: "First Lieutenant").present?
+@marines.military_ranks.create!({
+  name: "Captain",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Captain.png",
+  order: 20}) unless @marines.military_ranks.find_by(name: "Captain").present?
+@marines.military_ranks.create!({
+  name: "Major",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Major.png",
+  order: 21}) unless @marines.military_ranks.find_by(name: "Major").present?
+@marines.military_ranks.create!({
+  name: "Lieutenant Colonel",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Lieutenant_Colonel.png",
+  order: 22}) unless @marines.military_ranks.find_by(name: "Lieutenant Colonel").present?
+@marines.military_ranks.create!({
+  name: "Colonel",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Colonel.png",
+  order: 23}) unless @marines.military_ranks.find_by(name: "Colonel").present?
+@marines.military_ranks.create!({
+  name: "Brigadier General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Brigadier_General.png",
+  order: 24}) unless @marines.military_ranks.find_by(name: "Brigadier General").present?
+@marines.military_ranks.create!({
+  name: "Major General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Major_General.png",
+  order: 25}) unless @marines.military_ranks.find_by(name: "Major General").present?
+@marines.military_ranks.create!({
+  name: "Lieutenant General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_Lieutenant_General.png",
+  order: 26}) unless @marines.military_ranks.find_by(name: "Lieutenant General").present?
+@marines.military_ranks.create!({
+  name: "General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/marines/Marines_General.png",
+  order: 27}) unless @marines.military_ranks.find_by(name: "General").present?
+
+@air_force.military_ranks.create!({
+  name: "Airman Basic",
+  image: "",
+  order: 1}) unless @air_force.military_ranks.find_by(name: "Airman Basic").present?
+@air_force.military_ranks.create!({
+  name: "Airman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Airman.png",
+  order: 2}) unless @air_force.military_ranks.find_by(name: "Airman").present?
+@air_force.military_ranks.create!({
+  name: "Airman First Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Airman_First_Class.png",
+  order: 3}) unless @air_force.military_ranks.find_by(name: "Airman First Class").present?
+@air_force.military_ranks.create!({
+  name: "Senior Airman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Senior_Airman.png",
+  order: 4}) unless @air_force.military_ranks.find_by(name: "Senior Airman").present?
+@air_force.military_ranks.create!({
+  name: "Staff Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Staff_Sergeant.png",
+  order: 5}) unless @air_force.military_ranks.find_by(name: "Staff Sergeant").present?
+@air_force.military_ranks.create!({
+  name: "Technical Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Technical_Sergeant.png",
+  order: 6}) unless @air_force.military_ranks.find_by(name: "Technical Sergeant").present?
+@air_force.military_ranks.create!({
+  name: "Master Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Master_Sergeant.png",
+  order: 7}) unless @air_force.military_ranks.find_by(name: "Master Sergeant").present?
+@air_force.military_ranks.create!({
+  name: "Senior Master Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Senior_Master_Sergeant.png",
+  order: 8}) unless @air_force.military_ranks.find_by(name: "Senior Master Sergeant").present?
+@air_force.military_ranks.create!({
+  name: "Chief Master Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Chief_Master_Sergeant.png",
+  order: 9}) unless @air_force.military_ranks.find_by(name: "Chief Master Sergeant").present?
+@air_force.military_ranks.create!({
+  name: "Command Chief Master Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Command_Chief_Master_Sergeant.png",
+  order: 10}) unless @air_force.military_ranks.find_by(name: "Command Chief Master Sergeant").present?
+@air_force.military_ranks.create!({
+  name: "Chief Master Sergeant of the Air Force",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Chief_Master_Sergeant_of_the_Air_Force.png",
+  order: 11}) unless @air_force.military_ranks.find_by(name: "Chief Master Sergeant of the Air Force").present?
+@air_force.military_ranks.create!({
+  name: "Second Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Second_Lieutenant.png",
+  order: 12}) unless @air_force.military_ranks.find_by(name: "Second Lieutenant").present?
+@air_force.military_ranks.create!({
+  name: "First Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_First_Lieutenant.png",
+  order: 13}) unless @air_force.military_ranks.find_by(name: "First Lieutenant").present?
+@air_force.military_ranks.create!({
+  name: "Captain",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Captain.png",
+  order: 14}) unless @air_force.military_ranks.find_by(name: "Captain").present?
+@air_force.military_ranks.create!({
+  name: "Major",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Major.png",
+  order: 15}) unless @air_force.military_ranks.find_by(name: "Major").present?
+@air_force.military_ranks.create!({
+  name: "Lieutenant Colonel",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Lieutenant_Colonel.png",
+  order: 16}) unless @air_force.military_ranks.find_by(name: "Lieutenant Colonel").present?
+@air_force.military_ranks.create!({
+  name: "Colonel",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Colonel.png",
+  order: 17}) unless @air_force.military_ranks.find_by(name: "Colonel").present?
+@air_force.military_ranks.create!({
+  name: "Brigadier General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Brigadier_General.png",
+  order: 18}) unless @air_force.military_ranks.find_by(name: "Brigadier General").present?
+@air_force.military_ranks.create!({
+  name: "Major General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Major_General.png",
+  order: 19}) unless @air_force.military_ranks.find_by(name: "Major General").present?
+@air_force.military_ranks.create!({
+  name: "Lieutenant General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_Lieutenant_General.png",
+  order: 20}) unless @air_force.military_ranks.find_by(name: "Lieutenant General").present?
+@air_force.military_ranks.create!({
+  name: "General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_General.png",
+  order: 21}) unless @air_force.military_ranks.find_by(name: "General").present?
+@air_force.military_ranks.create!({
+  name: "General of the Air Force",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/air_force/Air_Force_General_of_the_Air_Force.png",
+  order: 22}) unless @air_force.military_ranks.find_by(name: "General of the Air Force").present?
+  
+@coast_guard.military_ranks.create!({
+  name: "Seaman Recruit",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Seaman_Recruit.png",
+  order: 1}) unless @coast_guard.military_ranks.find_by(name: "Seaman Recruit").present?
+@coast_guard.military_ranks.create!({
+  name: "Seaman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Seaman_Apprentice.png",
+  order: 2}) unless @coast_guard.military_ranks.find_by(name: "Seaman Apprentice").present?
+@coast_guard.military_ranks.create!({
+  name: "Fireman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Fireman_Apprentice.png",
+  order: 3}) unless @coast_guard.military_ranks.find_by(name: "Fireman Apprentice").present?
+@coast_guard.military_ranks.create!({
+  name: "Airman Apprentice",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Airman_Apprentice.png",
+  order: 4}) unless @coast_guard.military_ranks.find_by(name: "Airman Apprentice").present?
+@coast_guard.military_ranks.create!({
+  name: "Seaman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Seaman.png",
+  order: 5}) unless @coast_guard.military_ranks.find_by(name: "Seaman").present?
+@coast_guard.military_ranks.create!({
+  name: "Fireman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Fireman.png",
+  order: 6}) unless @coast_guard.military_ranks.find_by(name: "Fireman").present?
+@coast_guard.military_ranks.create!({
+  name: "Airman",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Airman.png",
+  order: 7}) unless @coast_guard.military_ranks.find_by(name: "Airman").present?
+@coast_guard.military_ranks.create!({
+  name: "Petty Officer Third Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Petty_Officer_Third_Class.png",
+  order: 8}) unless @coast_guard.military_ranks.find_by(name: "Petty Officer Third Class").present?
+@coast_guard.military_ranks.create!({
+  name: "Petty Officer Second Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Petty_Officer_Second_Class.png",
+  order: 9}) unless @coast_guard.military_ranks.find_by(name: "Petty Officer Second Class").present?
+@coast_guard.military_ranks.create!({
+  name: "Petty Officer First Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Petty_Officer_First_Class.png",
+  order: 10}) unless @coast_guard.military_ranks.find_by(name: "Petty Officer First Class").present?
+@coast_guard.military_ranks.create!({
+  name: "Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Chief_Petty_Officer.png",
+  order: 11}) unless @coast_guard.military_ranks.find_by(name: "Chief Petty Officer").present?
+@coast_guard.military_ranks.create!({
+  name: "Senior Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Senior_Chief_Petty_Officer.png",
+  order: 12}) unless @coast_guard.military_ranks.find_by(name: "Senior Chief Petty Officer").present?
+@coast_guard.military_ranks.create!({
+  name: "Master Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Master_Chief_Petty_Officer.png",
+  order: 13}) unless @coast_guard.military_ranks.find_by(name: "Master Chief Petty Officer").present?
+@coast_guard.military_ranks.create!({
+  name: "Command Master Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Command_Master_Chief_Petty_Officer.png",
+  order: 14}) unless @coast_guard.military_ranks.find_by(name: "Command Master Chief Petty Officer").present?
+@coast_guard.military_ranks.create!({
+  name: "Gold Badge Master Chief Petty Officer",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Gold_Badge_Master_Chief_Petty_Officer.png",
+  order: 15}) unless @coast_guard.military_ranks.find_by(name: "Gold Badge Master Chief Petty Officer").present?
+@coast_guard.military_ranks.create!({
+  name: "Master Chief Petty Officer of the Coast Guard",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Master_Chief_Petty_Officer_of_the_Coast_Guard.png",
+  order: 16}) unless @coast_guard.military_ranks.find_by(name: "Master Chief Petty Officer of the Coast Guard").present?
+@coast_guard.military_ranks.create!({
+  name: "Chief Warrant Officer Two",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Chief_Warrant_Officer_2.png",
+  order: 17}) unless @coast_guard.military_ranks.find_by(name: "Chief Warrant Officer Two").present?
+@coast_guard.military_ranks.create!({
+  name: "Chief Warrant Officer Three",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Chief_Warrant_Officer_3.png",
+  order: 18}) unless @coast_guard.military_ranks.find_by(name: "Chief Warrant Officer Three").present?
+@coast_guard.military_ranks.create!({
+  name: "Chief Warrant Officer Four",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Chief_Warrant_Officer_4.png",
+  order: 19}) unless @coast_guard.military_ranks.find_by(name: "Chief Warrant Officer Four").present?
+@coast_guard.military_ranks.create!({
+  name: "Ensign",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Ensign.png",
+  order: 20}) unless @coast_guard.military_ranks.find_by(name: "Ensign").present?
+@coast_guard.military_ranks.create!({
+  name: "Lieutenant (Junior Grade)",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Lieutenant_Junior.png",
+  order: 21}) unless @coast_guard.military_ranks.find_by(name: "Lieutenant (Junior Grade)").present?
+@coast_guard.military_ranks.create!({
+  name: "Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Lieutenant.png",
+  order: 22}) unless @coast_guard.military_ranks.find_by(name: "Lieutenant").present?
+@coast_guard.military_ranks.create!({
+  name: "Lieutenant Commander",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Lieutenant_Commander.png",
+  order: 23}) unless @coast_guard.military_ranks.find_by(name: "Lieutenant Commander").present?
+@coast_guard.military_ranks.create!({
+  name: "Commander",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Commander.png",
+  order: 24}) unless @coast_guard.military_ranks.find_by(name: "Commander").present?
+@coast_guard.military_ranks.create!({
+  name: "Captain",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Captain.png",
+  order: 25}) unless @coast_guard.military_ranks.find_by(name: "Captain").present?
+@coast_guard.military_ranks.create!({
+  name: "Rear Admiral (Lower Half)",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Rear_Admiral_Lower.png",
+  order: 26}) unless @coast_guard.military_ranks.find_by(name: "Rear Admiral (Lower Half)").present?
+@coast_guard.military_ranks.create!({
+  name: "Rear Admiral",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Rear_Admiral.png",
+  order: 27}) unless @coast_guard.military_ranks.find_by(name: "Rear Admiral").present?
+@coast_guard.military_ranks.create!({
+  name: "Vice Admiral",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Vice_Admiral.png",
+  order: 28}) unless @coast_guard.military_ranks.find_by(name: "Vice Admiral").present?
+@coast_guard.military_ranks.create!({
+  name: "Admiral",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/coast_guard/Coast_Guard_Admiral.png",
+  order: 29}) unless @coast_guard.military_ranks.find_by(name: "Admiral").present?
+
+
+@army.military_ranks.create!({
+  name: "Private",
+  image: "",
+  order: 1}) unless @army.military_ranks.find_by(name: "Private").present?
+@army.military_ranks.create!({
+  name: "Private Second Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Private_Second_Class.png",
+  order: 2}) unless @army.military_ranks.find_by(name: "Private Second Class").present?
+@army.military_ranks.create!({
+  name: "Private First Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Private_First_Class.png",
+  order: 3}) unless @army.military_ranks.find_by(name: "Private First Class").present?
+@army.military_ranks.create!({
+  name: "Specialist",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Specialist.png",
+  order: 4}) unless @army.military_ranks.find_by(name: "Specialist").present?
+@army.military_ranks.create!({
+  name: "Corporal",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Corporal.png",
+  order: 5}) unless @army.military_ranks.find_by(name: "Corporal").present?
+@army.military_ranks.create!({
+  name: "Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Sergeant.png",
+  order: 6}) unless @army.military_ranks.find_by(name: "Sergeant").present?
+@army.military_ranks.create!({
+  name: "Staff Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Staff_Sergeant.png",
+  order: 7}) unless @army.military_ranks.find_by(name: "Staff Sergeant").present?
+@army.military_ranks.create!({
+  name: "Sergeant First Class",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Sergeant_First_Class.png",
+  order: 8}) unless @army.military_ranks.find_by(name: "Sergeant First Class").present?
+@army.military_ranks.create!({
+  name: "Master Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Master_Sergeant.png",
+  order: 9}) unless @army.military_ranks.find_by(name: "Master Sergeant").present?
+@army.military_ranks.create!({
+  name: "First Sergeant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_First_Sergeant.png",
+  order: 10}) unless @army.military_ranks.find_by(name: "First Sergeant").present?
+@army.military_ranks.create!({
+  name: "Sergeant Major",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Sergeant_Major.png",
+  order: 11}) unless @army.military_ranks.find_by(name: "Sergeant Major").present?
+@army.military_ranks.create!({
+  name: "Command Sergeant Major",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Command_Sergeant_Major.png",
+  order: 12}) unless @army.military_ranks.find_by(name: "Command Sergeant Major").present?
+@army.military_ranks.create!({
+  name: "Sergeant Major of the Army",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Sergeant_Major_of_the_Army.png",
+  order: 13}) unless @army.military_ranks.find_by(name: "Sergeant Major of the Army").present?
+@army.military_ranks.create!({
+  name: "Warrant Officer One",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Warrant_Officer_1.png",
+  order: 14}) unless @army.military_ranks.find_by(name: "Warrant Officer One").present?
+@army.military_ranks.create!({
+  name: "Chief Warrant Officer Two",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Chief_Warrant_Officer_2.png",
+  order: 15}) unless @army.military_ranks.find_by(name: "Chief Warrant Officer Two").present?
+@army.military_ranks.create!({
+  name: "Chief Warrant Officer Three",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Chief_Warrant_Officer_3.png",
+  order: 16}) unless @army.military_ranks.find_by(name: "Chief Warrant Officer Three").present?
+@army.military_ranks.create!({
+  name: "Chief Warrant Officer Four",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Chief_Warrant_Officer_4.png",
+  order: 17}) unless @army.military_ranks.find_by(name: "Chief Warrant Officer Four").present?
+@army.military_ranks.create!({
+  name: "Chief Warrant Officer Five",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Chief_Warrant_Officer_5.png",
+  order: 18}) unless @army.military_ranks.find_by(name: "Chief Warrant Officer Five").present?
+@army.military_ranks.create!({
+  name: "Second Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Second_Lieutenant.png",
+  order: 19}) unless @army.military_ranks.find_by(name: "Second Lieutenant").present?
+@army.military_ranks.create!({
+  name: "First Lieutenant",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_First_Lieutenant.png",
+  order: 20}) unless @army.military_ranks.find_by(name: "First Lieutenant").present?
+@army.military_ranks.create!({
+  name: "Captain",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Captain.png",
+  order: 21}) unless @army.military_ranks.find_by(name: "Captain").present?
+@army.military_ranks.create!({
+  name: "Major",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Major.png",
+  order: 22}) unless @army.military_ranks.find_by(name: "Major").present?
+@army.military_ranks.create!({
+  name: "Lieutenant Colonel",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Lieutenant_Colonel.png",
+  order: 23}) unless @army.military_ranks.find_by(name: "Lieutenant Colonel").present?
+@army.military_ranks.create!({
+  name: "Colonel",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Colonel.png",
+  order: 24}) unless @army.military_ranks.find_by(name: "Colonel").present?
+@army.military_ranks.create!({
+  name: "Brigadier General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Brigadier_General.png",
+  order: 25}) unless @army.military_ranks.find_by(name: "Brigadier General").present?
+@army.military_ranks.create!({
+  name: "Major General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Major_General.png",
+  order: 26}) unless @army.military_ranks.find_by(name: "Major General").present?
+@army.military_ranks.create!({
+  name: "Lieutenant General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_Lieutenant_General.png",
+  order: 27}) unless @army.military_ranks.find_by(name: "Lieutenant General").present?
+@army.military_ranks.create!({
+  name: "General",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_General.png",
+  order: 28}) unless @army.military_ranks.find_by(name: "General").present?
+@army.military_ranks.create!({
+  name: "General of the Army",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_General_of_the_Army.png",
+  order: 29}) unless @army.military_ranks.find_by(name: "General of the Army").present?
+@army.military_ranks.create!({
+  name: "General of the Armies",
+  image: "https://memorial-imgs.s3.amazonaws.com/military/ranks/army/Army_General_of_the_Armies.png",
+  order: 30}) unless @army.military_ranks.find_by(name: "General of the Armies").present?

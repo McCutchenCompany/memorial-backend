@@ -1,5 +1,5 @@
 class MilitaryBranchesController < ApplicationController
-  before_action :set_military_branch, only: [:show, :update, :destroy, :medals]
+  before_action :set_military_branch, only: [:show, :update, :destroy, :medals, :ranks]
 
   # GET /military_branches
   def index
@@ -24,6 +24,15 @@ class MilitaryBranchesController < ApplicationController
       render json: medals.to_json(only: [:uuid, :name, :image])
     else
       render json: {error: "This is an invalid military branch"}, status: :unprocessable_entity
+    end
+  end
+
+  # GET /military_branches/1/ranks
+  def ranks
+    if @military_branch
+      render json: @military_branch.military_ranks, only: [:uuid, :name, :image]
+    else
+      render json: {error: "Invalid military branch"}, status: 404
     end
   end
 

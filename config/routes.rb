@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
 
+  resources :military_ranks
   resources :mem_military_branches_medals
   resources :military_branch_medals
   resources :memorial_medals
   resources :medals
-  resources :memorial_military_branches
   get '/', to: 'application#status'
   get 'status', to: 'application#status'
   get 'find_places', to: 'application#find_places'
@@ -14,9 +14,16 @@ Rails.application.routes.draw do
   resources :roles
   resources :photos
 
+  resources :memorial_military_branches do
+    member do
+      patch 'rank'
+    end
+  end
+
   resources :military_branches do
     member do
       get 'medals'
+      get 'ranks'
     end
   end
   
