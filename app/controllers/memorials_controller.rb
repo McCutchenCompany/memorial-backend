@@ -422,6 +422,11 @@ class MemorialsController < ApplicationController
               ]
             }
           },
+          military_rank: {
+            only: [
+              :uuid, :name, :image
+            ]
+          },
           military_branch: {
             only: [
               :uuid, :name, :image, :description

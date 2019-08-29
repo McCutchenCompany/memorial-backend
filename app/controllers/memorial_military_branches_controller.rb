@@ -38,6 +38,11 @@ class MemorialMilitaryBranchesController < ApplicationController
                 ]
               }
             },
+            military_rank: {
+              only: [
+                :uuid, :name, :image
+              ]
+            },
             military_branch: {
               only: [
                 :uuid, :name, :image, :description
@@ -73,6 +78,11 @@ class MemorialMilitaryBranchesController < ApplicationController
               ]
             }
           },
+          military_rank: {
+            only: [
+              :uuid, :name, :image
+            ]
+          },
           military_branch: {
             only: [
               :uuid, :name, :image, :description
@@ -90,8 +100,8 @@ class MemorialMilitaryBranchesController < ApplicationController
     if @memorial.can_access(@user)
       @rank = MilitaryRank.find(params[:military_rank_id])
       @memorial_military_branch.update({military_rank_id: @rank[:uuid]})
-      render json: @memorial.memorial_military_branches, 
-      only: [:uuid, :start_date, :end_date], 
+      render json: @memorial.memorial_military_branches,
+      only: [:uuid, :start_date, :end_date],
       include: [
         {
           mem_military_branches_medals: {
@@ -144,6 +154,11 @@ class MemorialMilitaryBranchesController < ApplicationController
                 :date_awarded, :description, :order, :uuid
               ]
             }
+          },
+          military_rank: {
+            only: [
+              :uuid, :name, :image
+            ]
           },
           military_branch: {
             only: [
