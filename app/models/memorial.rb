@@ -72,7 +72,7 @@ class Memorial < ApplicationRecord
       false
     else
       organization = Organization.find(self[:organization_id])
-      true unless organization.users.where(uuid: user[:uuid]).length == 0
+      true unless organization.users.find_by(uuid: user[:uuid]).nil?
     end
   end
 
