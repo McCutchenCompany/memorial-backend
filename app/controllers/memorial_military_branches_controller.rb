@@ -18,7 +18,7 @@ class MemorialMilitaryBranchesController < ApplicationController
 
   # POST /memorial_military_branches
   def create
-    if @memorial && @memorial.can_access(@user)
+    if @memorial && @memorial[:unlocked] && @memorial.can_access(@user)
       if @memorial.military_branches.where(uuid: params[:military_branch_id]).empty?
         MemorialMilitaryBranch.create!({military_branch_id: params[:military_branch_id], memorial_id: @memorial[:uuid]})
         render json: @memorial.memorial_military_branches, 
