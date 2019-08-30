@@ -24,9 +24,6 @@ class MemorialsController < ApplicationController
     :military
   ]
 
-  skip_before_action :set_user, only: [:military]
-  skip_before_action :authenticate_request!, only: [:military]
-
   # GET /memorials
   def index
     @pagination = {
