@@ -53,11 +53,41 @@ class PublicMemorialsController < ApplicationController
         end
         @location = @memorial.location
         @timeline = @memorial.timeline.where.not(date: nil).sort_by &:date
+        @military = @memorial.memorial_military_branches.to_json(
+          only: [:uuid, :start_date, :end_date], 
+          include: [
+            {
+              mem_military_branches_medals: {
+                include: {
+                  medal: {
+                    only: [
+                      :uuid, :name, :image
+                    ]
+                  },
+                },
+                only: [
+                  :date_awarded, :description, :order, :uuid
+                ]
+              }
+            },
+            military_rank: {
+              only: [
+                :uuid, :name, :image
+              ]
+            },
+            military_branch: {
+              only: [
+                :uuid, :name, :image, :description
+              ]
+            }
+          ]
+        )
         @response = {
           memorial: @memorial,
           location: @location,
           timeline: @timeline,
           memories: @memories,
+          military: ActiveSupport::JSON.decode(@military),
           album: {count: @photo_count, photos: @photos}
         }
         render json: @response
