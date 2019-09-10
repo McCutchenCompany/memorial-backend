@@ -49,8 +49,40 @@ class LocationsController < ApplicationController
     if @locations = Location.find_in_range(range_params)
       locations = []
       @locations.each { |location|
-        entry = location.as_json
-        entry[:memorial] = location.memorial.as_json
+        memorial = location.memorial
+        entry = location.as_json(only: [:memorial_id, :latitude, :longitude, :description])
+        entry[:memorial] = memorial.as_json(
+          only: [
+            :uuid, :first_name, :middle_name, :last_name, :image, :birth_date, :death_date, :posY, :posX, :scale, :rot
+          ]
+        )
+        entry[:military] = memorial.memorial_military_branches.as_json(
+          only: [], 
+          include: [
+            {
+              honor_military_medals: {
+                include: {
+                  medal: {
+                    only: [
+                      :uuid, :name
+                    ]
+                  },
+                },
+                only: []
+              }
+            },
+            military_rank: {
+              only: [
+                :name, :image
+              ]
+            },
+            military_branch: {
+              only: [
+                :name, :image
+              ]
+            }
+          ]
+        )
         entry[:memorial][:location] = location[:description]
         locations.push(entry)
       }
